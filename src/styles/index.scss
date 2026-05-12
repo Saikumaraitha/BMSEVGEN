@@ -1,0 +1,53 @@
+@use 'variables';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide all scrollbars globally — layout scrolls functionally but shows no bar */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .scrollbar-thin-styled {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-neutral-300) transparent;
+
+    &::-webkit-scrollbar {
+      display: block;
+      width: 4px;
+      height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-neutral-300);
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--color-neutral-500);
+    }
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.page-fade-in {
+  animation: fade-in 0.18s ease-out;
+}

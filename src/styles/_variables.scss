@@ -1,0 +1,269 @@
+:root {
+  // --- Brand Colors ---
+  --color-primary:         #BE2BBB;
+  --color-primary-vivid:   #E43BE0;
+  --color-primary-light:   #F8F3F2;
+  --color-primary-dark:    #A1179E;
+
+  --color-secondary:       #7C3AED;
+  --color-secondary-light: #A78BFA;
+  --color-secondary-dark:  #5B21B6;
+
+  --color-accent:          #F59E0B;
+
+  --color-subnav-bg:       #F5F1F0;
+  --color-tab-accent:      #BA9A9B;
+  --color-tab-bg:          #FBFBFB;
+
+  // --- Card Tokens ---
+  --color-card-header-text: #785253;
+  --color-card-body-bg:     #FCFAFD;
+  --color-card-body-text:   #434343;
+
+  --color-neutral-50:      #F9FAFB;
+  --color-neutral-100:     #F3F4F6;
+  --color-neutral-200:     #E5E7EB;
+  --color-neutral-500:     #6B7280;
+  --color-neutral-700:     #374151;
+  --color-neutral-900:     #111827;
+
+  --color-success:         #10B981;
+  --color-warning:         #F59E0B;
+  --color-error:           #EF4444;
+
+  // --- Additional Semantic Shades ---
+  --color-success-dark:        #059669;
+  --color-warning-dark:        #D97706;
+  --color-error-dark:          #DC2626;
+
+  // --- Neutral additions ---
+  --color-neutral-300:         #D1D5DB;
+  --color-neutral-400:         #9CA3AF;
+  --color-neutral-600:         #4B5563;
+
+  // --- Component: Modal ---
+  --color-modal-header-bg:     #EDE7F0;
+  --color-modal-studies-bg:    #F6F6F6;
+
+  // --- Map ---
+  --color-map-bg:              #F0F4F8;
+
+  // --- Section Icons ---
+  --color-icon-etiology:       #E57C23;
+  --color-icon-diagnosis:      #2563EB;
+  --color-icon-cyan:           #0891B2;
+  --color-icon-teal:           #0D9488;
+  --color-icon-orange:         #EA580C;
+
+  // --- MOA Overview Section Icon Backgrounds ---
+  --color-moa-molecular-bg:  rgba(191, 242, 252, 0.25);
+  --color-moa-pattern-bg:    #FFF6F1;
+  --color-moa-landscape-bg:  #F1FFF9;
+
+  // --- Disease Pathophysiology Section Card Backgrounds ---
+  --color-section-etiology-bg:    rgba(191, 242, 252, 0.25);
+  --color-section-symptoms-bg:    rgba(254, 220, 202, 0.25);
+  --color-section-prevalence-bg:  #F1FFF9;
+  --color-section-diagnosis-bg:   #EFFCFE;
+  --color-section-patients-bg:    #FFF6F1;
+  --color-section-specialists-bg: #F1FFF9;
+  --color-section-treatments-bg:  rgba(191, 242, 251, 0.25);
+
+  // --- Medical Strategic Context ---
+  --color-si-header-1-bg:      #EFF6FF;
+  --color-si-header-2-bg:      #ECFEFF;
+  --color-si-header-3-bg:      #F0FDFA;
+
+  --color-si-1-label:          #554BBE;
+  --color-si-1-title:          #272160;
+  --color-si-2-label:          #077789;
+  --color-si-2-title:          #21474D;
+  --color-si-3-label:          #128867;
+  --color-si-3-title:          #0D3F31;
+
+  --color-mo-badge-text:       #836E67;
+  --color-mo-badge-bg:         #F5F1F0;
+
+  // --- Matrix Quadrant Backgrounds ---
+  --color-quadrant-top-priority-bg: #ECFDF5;
+  --color-quadrant-long-term-bg:    #FFFBEB;
+  --color-quadrant-urgent-bg:       #F5F3FF;
+  --color-quadrant-lower-bg:        #FEF2F2;
+
+  // --- Gap Priority & Urgency Badges ---
+  --color-gap-priority-high-bg:    #16A34A;
+  --color-gap-priority-medium-bg:  #F59E0B;
+  --color-gap-priority-low-bg:     #F3F4F6;
+  --color-gap-priority-low-text:   #6B7280;
+  --color-gap-urgency-bg:          #FCE7F3;
+  --color-gap-urgency-text:        #EC4899;
+
+
+  // --- Table ---
+  --color-table-header-bg:        var(--color-primary-dark);
+  --color-table-sticky-row-even:  #F9EDF8;
+  --color-table-sticky-row-odd:   #FCF6FC;
+  --color-table-sticky-text:      #0E1F32;
+  --color-table-row-even:         #F5F5F5;
+  --color-table-row-odd:          #FDFDFD;
+  --color-table-body-text:        #494949;
+
+  // --- Chart ---
+  --color-chart-grid:              #F0F0F0;
+  --color-chart-tick-muted:        #888888;
+  --color-chart-tick-mid:          #444444;
+  --color-chart-label:             #423D3D;
+
+  // --- Chart Series Colors ---
+  --color-chart-teal-dark:         #0E6B6B;
+  --color-chart-teal:              #00A3A3;
+  --color-chart-teal-light:        #80D4D4;
+  --color-chart-mauve:             #C4A5A5;
+  --color-chart-pink-light:        #F4B8C8;
+
+  // --- Link ---
+  --color-link:                    #115BBC;
+
+  // --- Text Scale ---
+  --color-text-heading:            #3A3A3A;
+  --color-text-dark:               #282828;
+  --color-text-mid:                #4F4A4A;
+  --color-text-muted:              #555555;
+  --color-text-body:               #404040;
+
+  // --- Backgrounds ---
+  --color-bg-row-alt:              #F9F9F9;
+  --color-bg-filter-bar:           #F7F7F7;
+  --color-bg-stat-card-wrap:       rgba(217, 197, 196, 0.2);
+
+  // --- Executive Summary ---
+  --color-exec-icon-bg:            #F8EAF8;
+  --color-exec-row-bg:             #F8F3F8;
+  --color-exec-new-badge-bg:       #F1DDF1;
+
+  // --- Primary Tints ---
+  --color-primary-tint-04:         rgba(190, 43, 187, 0.04);
+  --color-primary-tint-10:         rgba(190, 43, 187, 0.1);
+  --color-primary-tint-45:         rgba(190, 43, 187, 0.45);
+
+  // --- Secondary Button Tokens ---
+  --btn-secondary-bg:          transparent;
+  --btn-secondary-text:        var(--color-primary);
+  --btn-secondary-border:      var(--color-primary);
+  --btn-secondary-bg-hover:    var(--color-primary-light);
+  --btn-secondary-text-hover:  #ffffff;
+
+  // --- Error / Form State Colors ---
+  --color-error-bg:              #FEF2F2;
+  --color-error-border:          #FECACA;
+  --color-error-text:            #B91C1C;
+  --color-error-icon:            #F87171;
+
+  // --- Extended Neutral Scale ---
+  --color-neutral-400:           #9CA3AF;
+  --color-neutral-600:           #4B5563;
+
+  // --- Links ---
+  --color-link-bright:           #0076E4;
+
+  // --- SubNav / Tab Extras ---
+  --color-tab-inactive:          #595454;
+  --color-subnav-meta:           #9F837C;
+  --color-text-near-black:       #131313;
+
+  // --- Section UI ---
+  --color-section-divider:       #F9A8D4;
+  --color-section-title-bg:      #C026D3;
+
+  // --- SWOT Category Colors ---
+  --color-swot-strengths-border: #10B981;
+  --color-swot-strengths-bg:     #ECFDF5;
+  --color-swot-strengths-text:   #047857;
+  --color-swot-weaknesses-border:#F59E0B;
+  --color-swot-weaknesses-bg:    #FFFBEB;
+  --color-swot-weaknesses-text:  #B45309;
+  --color-swot-opportunities-border: #3B82F6;
+  --color-swot-opportunities-bg: #EFF6FF;
+  --color-swot-opportunities-text: #1D4ED8;
+  --color-swot-threats-border:   #EF4444;
+  --color-swot-threats-bg:       #FEF2F2;
+  --color-swot-threats-text:     #B91C1C;
+
+  // --- Strategic Imperative Card Schemes ---
+  --color-si-card-orange-bg:     #FFF7ED;
+  --color-si-card-orange-border: #FED7AA;
+  --color-si-card-orange-badge:  #FB923C;
+  --color-si-card-blue-bg:       #EFF6FF;
+  --color-si-card-blue-border:   #BFDBFE;
+  --color-si-card-blue-badge:    #2563EB;
+  --color-si-card-teal-bg:       #F0FDFA;
+  --color-si-card-teal-border:   #99F6E4;
+  --color-si-card-teal-badge:    #14B8A6;
+
+  // --- Gap Priority & Urgency Badges ---
+  --color-gap-priority-high-bg:    #16A34A;
+  --color-gap-priority-medium-bg:  #F59E0B;
+  --color-gap-priority-low-bg:     #F3F4F6;
+  --color-gap-priority-low-text:   #6B7280;
+  --color-gap-urgency-bg:          #FCE7F3;
+  --color-gap-urgency-text:        #EC4899;
+
+  // --- KDM Priority Badges ---
+  --color-kdm-priority-high-bg:    #FED7AA;
+  --color-kdm-priority-high-text:  #C2410C;
+  --color-kdm-priority-medium-bg:  #FDE68A;
+  --color-kdm-priority-medium-text:#B45309;
+  --color-kdm-priority-low-bg:     #E5E7EB;
+  --color-kdm-priority-low-text:   #4B5563;
+  --color-kdm-priority-sp-bg:      #BFDBFE;
+  --color-kdm-priority-sp-text:    #1D4ED8;
+
+  // --- Shared Tag Colors ---
+  --color-tag-teal-bg:             #CCFBF1;
+  --color-tag-teal-text:           #14B8A6;
+  --color-tag-violet-bg:           #EDE9FE;
+  --color-tag-violet-text:         #8B5CF6;
+  --color-tag-indigo-bg:           #E0E7FF;
+  --color-tag-indigo-text:         #6366F1;
+  --color-tag-pink-bg:             #FCE7F3;
+  --color-tag-pink-text:           #EC4899;
+  --color-tag-cyan-bg:             #CFFAFE;
+  --color-tag-cyan-text:           #06B6D4;
+  --color-tag-rose-bg:             #FFE4E6;
+  --color-tag-rose-text:           #F43F5E;
+
+  // --- Asset Card Tag Colors ---
+  --color-asset-tag-1-bg:          #CFFAFE;
+  --color-asset-tag-1-text:        #0E7490;
+  --color-asset-tag-2-bg:          #FCE7F3;
+  --color-asset-tag-2-text:        #BE185D;
+  --color-asset-tag-3-bg:          #EDE9FE;
+  --color-asset-tag-3-text:        #6D28D9;
+  --color-asset-tag-4-bg:          #FEF3C7;
+  --color-asset-tag-4-text:        #B45309;
+  --color-asset-tag-5-bg:          #DCFCE7;
+  --color-asset-tag-5-text:        #15803D;
+
+  // --- Typography: Font Family ---
+  --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-ui:      'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
+
+  // --- Typography: Font Size ---
+  --text-xs:   0.75rem;
+  --text-sm:          0.875rem;
+  --text-card-title:  0.9375rem;
+  --text-detail-link: 0.625rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+
+  // --- Typography: Font Weight ---
+  --font-normal:   400;
+  --font-medium:   500;
+  --font-semibold: 600;
+  --font-bold:     700;
+}
