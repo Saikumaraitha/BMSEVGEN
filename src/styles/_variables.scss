@@ -69,6 +69,20 @@
   --color-section-specialists-bg: #F1FFF9;
   --color-section-treatments-bg:  rgba(191, 242, 251, 0.25);
 
+   // --- Insight Type Badges ---
+  --color-badge-experts-text: #3c3489;
+  --color-badge-experts-bg: #eeedfe;
+  --color-badge-experts-dot: #7f77dd;
+  --color-badge-planning-text: #007156;
+  --color-badge-planning-bg: #dcf7ef;
+  --color-badge-planning-dot: #00a07a;
+  --color-badge-market-text: #c57100;
+  --color-badge-market-bg: #fcefd8;
+  --color-badge-market-dot: #c57100;
+  --color-badge-congress-text: #0061aa;
+  --color-badge-congress-bg: #e3f1fc;
+  --color-badge-congress-dot: #008ce4;
+
   // --- Medical Strategic Context ---
   --color-si-header-1-bg:      #EFF6FF;
   --color-si-header-2-bg:      #ECFEFF;
@@ -244,22 +258,52 @@
   --color-asset-tag-5-bg:          #DCFCE7;
   --color-asset-tag-5-text:        #15803D;
 
+  // --- Research Documents ---
+  --color-rd-note-tag-bg: #e3f1fc;
+  --color-rd-note-tag-text: #0061aa;
+  --color-rd-note-selected-bg: rgba(190, 43, 187, 0.04);
+  --color-rd-section-label: #88877f;
+  --color-rd-count: #706f64;
+  --color-rd-count-badge-bg: rgba(112, 111, 100, 0.10);
+  --color-rd-divider: #e0e0e0;
+  --color-rd-body-bg: #f7f6f3;
+  --color-rd-card-border: #d3cecc;
+  --color-rd-avatar-bg: #eeedff;
+  --color-rd-avatar-text: #5265b0;
+  --color-rd-owner-name: #444441;
+  --color-rd-description: #76756c;
+  --color-rd-tag-my-doc-text: #0079c5;
+  --color-rd-tag-can-edit-text: #148f72;
+  --color-rd-tag-view-only-bg: #eeece8;
+  --color-rd-tag-view-only-text: #5f5e5b;
+  --color-rd-trash: #de3a3d;
+  --color-rd-search-bg: #f4f4f4;
+  --color-rd-search-border: #979797;
+  --color-rd-search-placeholder: #8c7873;
+  --color-rd-sort-border: #b0b0b0;
+
   // --- Typography: Font Family ---
   --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Roboto', ui-sans-serif, system-ui, sans-serif;
   --font-ui:      'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
 
   // --- Typography: Font Size ---
-  --text-xs:   0.75rem;
-  --text-sm:          0.875rem;
-  --text-card-title:  0.9375rem;
-  --text-detail-link: 0.625rem;
-  --text-base: 1rem;
-  --text-lg:   1.125rem;
-  --text-xl:   1.25rem;
-  --text-2xl:  1.5rem;
-  --text-3xl:  1.875rem;
-  --text-4xl:  2.25rem;
+  --text-3xs:          0.5625rem;
+  --text-placeholder-sm: 0.72875rem;
+  --text-2xs:          0.6875rem;
+  --text-icon-sm:      0.73875rem;
+  --text-xs:           0.75rem;
+  --text-body-sm:      0.9rem;
+  --text-sm:           0.875rem;
+  --text-card-title:   0.9375rem;
+  --text-detail-link:  0.625rem;
+  --text-base:         1rem;
+  --text-base-lg:      1.0625rem;
+  --text-lg:           1.125rem;
+  --text-xl:           1.25rem;
+  --text-2xl:          1.5rem;
+  --text-3xl:          1.875rem;
+  --text-4xl:          2.25rem;
 
   // --- Typography: Font Weight ---
   --font-normal:   400;

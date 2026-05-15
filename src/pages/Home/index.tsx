@@ -54,7 +54,7 @@ function Home() {
   )
 
   const handleCardClick = (id: string) => {
-    navigate(buildPath(ROUTES.ASSET.EXECUTIVE_SUMMARY.ROOT, { assetId: id }))
+    navigate(buildPath(ROUTES.ASSET.CHAT_AGENTS, { assetId: id }))
   }
 
   const handleAddAsset = (asset: Asset) => {

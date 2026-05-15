@@ -1,7 +1,5 @@
 export const ASSET_NAV_ITEMS = [
-  'Executive Summary',
-  'Disease & Treatment Landscape',
-  'BMS Asset Strategy',
-  'Competitive Benchmark',
+  'Chat & Agents',
+  'Research Workspace',
   'Gap Identification & Prioritization',
 ] as const;
