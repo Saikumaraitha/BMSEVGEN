@@ -1,56 +1,64 @@
+import TrashIcon from '../../../assets/icons/trash.svg?react';
+
 interface AddNoteFormProps {
   title: string;
   content: string;
+  date: string;
+  author: string;
   onTitleChange: (v: string) => void;
   onContentChange: (v: string) => void;
-  onSave: (title: string, content: string) => void;
   onCancel: () => void;
 }
 
-function AddNoteForm({ title, content, onTitleChange, onContentChange, onSave, onCancel }: AddNoteFormProps) {
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => onTitleChange(e.target.value);
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => onContentChange(e.target.value);
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !content.trim()) return;
-    onSave(title.trim(), content.trim());
-  };
-
+function AddNoteForm({ title, content, date, author, onTitleChange, onContentChange, onCancel }: AddNoteFormProps) {
   return (
-    <form onSubmit={handleSave} className="border border-brand-primary rounded-xl p-4 bg-indigo-50/30 flex flex-col gap-3">
-      <input
-        type="text"
-        value={title}
-        onChange={handleTitleChange}
-        placeholder="Note title"
-        className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-primary"
-        required
-      />
-      <textarea
-        value={content}
-        onChange={handleContentChange}
-        placeholder="Note content..."
-        rows={4}
-        className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary"
-        required
-      />
-      <div className="flex gap-2 justify-end">
+    <div className="border border-dashed border-brand-primary rounded-xl bg-rd-new-note-bg pt-3 pb-4">
+      {/* Top row: NEW NOTE tag + date + trash */}
+      <div className="flex items-center px-4 mb-3">
+        <span className="h-[18px] flex items-center px-2.5 rounded-full text-3xs font-bold font-sans bg-brand-primary text-white uppercase tracking-wider shrink-0">
+          New Note
+        </span>
+        <div className="flex-1" />
+        <span className="text-2xs font-sans text-rd-section-label mr-1">{date}</span>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-1.5 rounded-lg text-sm font-medium border border-neutral-200 text-neutral-700 hover:bg-neutral-50 transition-colors"
+          className="p-1 rounded hover:bg-red-50 text-rd-trash transition-colors"
+          aria-label="Cancel new note"
         >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-1.5 rounded-lg text-sm font-medium bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors"
-        >
-          Save Note
+          <TrashIcon className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
-    </form>
+
+      {/* Inner input box */}
+      <div className="mx-4 border border-brand-primary rounded-lg bg-white px-3 py-2.5 mb-3">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          placeholder="Note Title"
+          autoFocus
+          className="w-full bg-transparent border-none outline-none text-sm font-semibold font-sans text-rd-note-title placeholder:text-rd-note-title/35 placeholder:font-semibold"
+        />
+        <div className="border-t border-neutral-100 my-2" />
+        <textarea
+          value={content}
+          onChange={(e) => onContentChange(e.target.value)}
+          placeholder="Add research notes or key observations"
+          rows={4}
+          className="w-full bg-transparent border-none outline-none resize-none text-xs font-normal font-sans text-rd-note-body leading-relaxed placeholder:text-rd-new-note-placeholder/35 placeholder:font-normal"
+        />
+      </div>
+
+      {/* Footer */}
+      <div className="px-4">
+        <p className="text-3xs font-normal font-sans text-rd-section-label flex items-center gap-1">
+          <span>{author}</span>
+          <span>·</span>
+          <span className="text-rd-tag-my-doc-text">via manual entry</span>
+        </p>
+      </div>
+    </div>
   );
 }
 

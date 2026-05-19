@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import type { DocumentComment } from '../../../types/research-documents';
 import { createCommentThreadHandlers } from '../../../handlers/research-documents/commentsPanelHandlers';
+import { getAvatarChipClasses } from '../../../utils/avatarPalette';
 
 interface CommentThreadProps {
   comment: DocumentComment;
-  onReply: (parentId: string, content: string, author: string, initials: string, color: string) => void;
+  onReply: (parentId: string, content: string, author: string, initials: string) => void;
 }
 
 function CommentThread({ comment, onReply }: CommentThreadProps) {
@@ -18,17 +19,15 @@ function CommentThread({ comment, onReply }: CommentThreadProps) {
     parentId: comment.id,
     author: 'You',
     initials: 'YO',
-    color: '#6366f1',
   });
+
+  const authorChip = getAvatarChipClasses(comment.author);
 
   return (
     <div className="flex flex-col gap-3 py-3 border-b border-rd-divider last:border-b-0">
       {/* Main comment */}
       <div className="flex gap-2.5">
-        <div
-          className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-2xs font-bold"
-          style={{ backgroundColor: comment.authorColor, color: comment.authorTextColor }}
-        >
+        <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-2xs font-bold ${authorChip.bg} ${authorChip.text}`}>
           {comment.authorInitials}
         </div>
         <div className="flex-1 min-w-0">
@@ -51,25 +50,25 @@ function CommentThread({ comment, onReply }: CommentThreadProps) {
       </div>
 
       {/* Replies */}
-      {(comment.replies ?? []).map((reply) => (
-        <div key={reply.id} className="flex gap-2.5 pl-4">
-          <div
-            className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-2xs font-bold"
-            style={{ backgroundColor: reply.authorColor, color: reply.authorTextColor }}
-          >
-            {reply.authorInitials}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap mb-1">
-              <span className="text-xs font-semibold text-rd-owner-name">{reply.author}</span>
-              <span className="text-2xs text-rd-section-label">{reply.date}</span>
-              <span className="text-2xs text-rd-section-label">·</span>
-              <span className="text-2xs text-rd-section-label">{reply.time}</span>
+      {(comment.replies ?? []).map((reply) => {
+        const replyChip = getAvatarChipClasses(reply.author);
+        return (
+          <div key={reply.id} className="flex gap-2.5 pl-4">
+            <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-2xs font-bold ${replyChip.bg} ${replyChip.text}`}>
+              {reply.authorInitials}
             </div>
-            <p className="text-sm font-sans text-rd-description leading-relaxed">{reply.content}</p>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                <span className="text-xs font-semibold text-rd-owner-name">{reply.author}</span>
+                <span className="text-2xs text-rd-section-label">{reply.date}</span>
+                <span className="text-2xs text-rd-section-label">·</span>
+                <span className="text-2xs text-rd-section-label">{reply.time}</span>
+              </div>
+              <p className="text-sm font-sans text-rd-description leading-relaxed">{reply.content}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {/* Reply input */}
       {showReply && (

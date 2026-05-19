@@ -2,14 +2,13 @@ import type { Dispatch, SetStateAction } from 'react';
 
 interface CommentsPanelHandlerDeps {
   setPostText: Dispatch<SetStateAction<string>>;
-  onPost: (content: string, author: string, initials: string, color: string) => void;
+  onPost: (content: string, author: string, initials: string) => void;
   author: string;
   initials: string;
-  color: string;
 }
 
 export function createCommentsPanelHandlers(deps: CommentsPanelHandlerDeps) {
-  const { setPostText, onPost, author, initials, color } = deps;
+  const { setPostText, onPost, author, initials } = deps;
 
   const handlePostChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setPostText(e.target.value);
@@ -17,7 +16,7 @@ export function createCommentsPanelHandlers(deps: CommentsPanelHandlerDeps) {
   const handlePost = (postText: string) => {
     const trimmed = postText.trim();
     if (!trimmed) return;
-    onPost(trimmed, author, initials, color);
+    onPost(trimmed, author, initials);
     setPostText('');
   };
 
@@ -27,15 +26,14 @@ export function createCommentsPanelHandlers(deps: CommentsPanelHandlerDeps) {
 interface CommentThreadHandlerDeps {
   setReplyText: Dispatch<SetStateAction<string>>;
   setShowReply: Dispatch<SetStateAction<boolean>>;
-  onReply: (parentId: string, content: string, author: string, initials: string, color: string) => void;
+  onReply: (parentId: string, content: string, author: string, initials: string) => void;
   parentId: string;
   author: string;
   initials: string;
-  color: string;
 }
 
 export function createCommentThreadHandlers(deps: CommentThreadHandlerDeps) {
-  const { setReplyText, setShowReply, onReply, parentId, author, initials, color } = deps;
+  const { setReplyText, setShowReply, onReply, parentId, author, initials } = deps;
 
   const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setReplyText(e.target.value);
@@ -45,7 +43,7 @@ export function createCommentThreadHandlers(deps: CommentThreadHandlerDeps) {
   const handleReplyPost = (replyText: string) => {
     const trimmed = replyText.trim();
     if (!trimmed) return;
-    onReply(parentId, trimmed, author, initials, color);
+    onReply(parentId, trimmed, author, initials);
     setReplyText('');
     setShowReply(false);
   };

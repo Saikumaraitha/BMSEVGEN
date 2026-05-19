@@ -12,11 +12,11 @@ function ChatBubble({ message, onAddToNotes, isAdded }: ChatBubbleProps) {
   if (isUser) {
     return (
       <div className="flex items-start gap-2 justify-end">
-        <div className="max-w-[80%] bg-[#704EA5] text-white rounded-3xl rounded-tr-none px-4 py-3 text-xs font-sans font-medium leading-relaxed">
+        <div className="max-w-[80%] bg-rd-chat-user-bg text-white rounded-3xl rounded-tr-none px-4 py-3 text-xs font-sans font-medium leading-relaxed">
           {message.content}
         </div>
         {message.userInitials && (
-          <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#704EA5] text-white text-xs font-semibold flex items-center justify-center">
+          <div className="flex-shrink-0 w-7 h-7 rounded-full bg-rd-chat-user-bg text-white text-xs font-semibold flex items-center justify-center">
             {message.userInitials}
           </div>
         )}
@@ -30,7 +30,7 @@ function ChatBubble({ message, onAddToNotes, isAdded }: ChatBubbleProps) {
         <i className="bi bi-stars text-brand-primary-dark text-xs" aria-hidden="true" />
       </div>
       <div className="flex flex-col gap-2 max-w-[80%]">
-        <div className="bg-rd-body-bg border border-[#E2E0D7] rounded-3xl rounded-tl-none px-4 py-3 text-xs font-sans font-medium text-rd-owner-name leading-relaxed">
+        <div className="bg-rd-body-bg border border-rd-chat-border rounded-3xl rounded-tl-none px-4 py-3 text-xs font-sans font-medium text-rd-owner-name leading-relaxed">
           {message.content}
         </div>
         {onAddToNotes && (

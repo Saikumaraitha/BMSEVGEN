@@ -104,15 +104,6 @@
   --color-quadrant-urgent-bg:       #F5F3FF;
   --color-quadrant-lower-bg:        #FEF2F2;
 
-  // --- Gap Priority & Urgency Badges ---
-  --color-gap-priority-high-bg:    #16A34A;
-  --color-gap-priority-medium-bg:  #F59E0B;
-  --color-gap-priority-low-bg:     #F3F4F6;
-  --color-gap-priority-low-text:   #6B7280;
-  --color-gap-urgency-bg:          #FCE7F3;
-  --color-gap-urgency-text:        #EC4899;
-
-
   // --- Table ---
   --color-table-header-bg:        var(--color-primary-dark);
   --color-table-sticky-row-even:  #F9EDF8;
@@ -182,6 +173,7 @@
 
   // --- SubNav / Tab Extras ---
   --color-tab-inactive:          #595454;
+  --color-tab-inactive-90:       rgba(89, 84, 84, 0.9);
   --color-subnav-meta:           #9F837C;
   --color-text-near-black:       #131313;
 
@@ -213,14 +205,6 @@
   --color-si-card-teal-bg:       #F0FDFA;
   --color-si-card-teal-border:   #99F6E4;
   --color-si-card-teal-badge:    #14B8A6;
-
-  // --- Gap Priority & Urgency Badges ---
-  --color-gap-priority-high-bg:    #16A34A;
-  --color-gap-priority-medium-bg:  #F59E0B;
-  --color-gap-priority-low-bg:     #F3F4F6;
-  --color-gap-priority-low-text:   #6B7280;
-  --color-gap-urgency-bg:          #FCE7F3;
-  --color-gap-urgency-text:        #EC4899;
 
   // --- KDM Priority Badges ---
   --color-kdm-priority-high-bg:    #FED7AA;
@@ -281,6 +265,39 @@
   --color-rd-search-border: #979797;
   --color-rd-search-placeholder: #8c7873;
   --color-rd-sort-border: #b0b0b0;
+  --color-rd-note-title:            #333134;
+  --color-rd-note-body:             #515052;
+  --color-rd-new-note-bg:           #FFF7FA;
+  --color-rd-new-note-placeholder:  #191919;
+  --color-rd-comment-bg:     #FFF7EC;
+  --color-rd-comment-text:   #D43400;
+  --color-rd-edit-banner-bg: #FFEAF7;
+  --color-rd-edit-hint:      #BF86BE;
+  --color-rd-cancel-border:  #D0D5DD;
+  --color-rd-cancel-text:    #495564;
+  --color-rd-edit-count:     #383836;
+  --color-rd-chat-user-bg:   #704EA5;
+  --color-rd-chat-border:    #E2E0D7;
+
+  // --- Avatar Palette (8 slots, solid bg — pair with text-white) ---
+  --color-av-1: #7C3AED;
+  --color-av-2: #0891B2;
+  --color-av-3: #D97706;
+  --color-av-4: #E879A0;
+  --color-av-5: #059669;
+  --color-av-6: #DC2626;
+  --color-av-7: #2563EB;
+  --color-av-8: #9333EA;
+
+  // --- Avatar Chip Palette (8 slots, light bg + dark text) ---
+  --color-av-chip-1-bg:   #EEEDFF; --color-av-chip-1-text: #5265B0;
+  --color-av-chip-2-bg:   #FDECE6; --color-av-chip-2-text: #A6330E;
+  --color-av-chip-3-bg:   #FEF3C7; --color-av-chip-3-text: #92400E;
+  --color-av-chip-4-bg:   #FDE6F0; --color-av-chip-4-text: #9D174D;
+  --color-av-chip-5-bg:   #D1FAE5; --color-av-chip-5-text: #065F46;
+  --color-av-chip-6-bg:   #FEE2E2; --color-av-chip-6-text: #991B1B;
+  --color-av-chip-7-bg:   #DBEAFE; --color-av-chip-7-text: #1E40AF;
+  --color-av-chip-8-bg:   #F3E8FF; --color-av-chip-8-text: #6B21A8;
 
   // --- Typography: Font Family ---
   --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;

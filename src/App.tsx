@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { ROUTE_SEGMENTS } from './constants/routes'
 import Home from './pages/Home'
 import ComingSoonAssetPage from './pages/ComingSoonAssetPage'
+import ChatAgents from './pages/ChatAgents'
 import ResearchDocuments from './pages/ResearchDocuments'
 import ResearchDocumentsList from './pages/ResearchDocuments/ResearchDocumentsList'
 import DocumentWorkspace from './pages/ResearchDocuments/DocumentWorkspace'
@@ -15,8 +16,8 @@ function App() {
 
       <Route path={S.ASSET_ROOT}>
 
-        {/* Chat & Agents — Coming Soon */}
-        <Route path={S.CHAT_AGENTS} element={<ComingSoonAssetPage activeTab="Chat & Agents" />} />
+        {/* Chat & Agents */}
+        <Route path={S.CHAT_AGENTS} element={<ChatAgents />} />
 
         {/* Research Workspace */}
         <Route path={S.RESEARCH_DOCUMENTS} element={<ResearchDocuments />}>

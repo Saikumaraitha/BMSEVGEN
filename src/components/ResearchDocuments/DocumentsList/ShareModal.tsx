@@ -103,7 +103,6 @@ function ShareModal({ open, docId, docTitle, onClose, onSave }: ShareModalProps)
       name: tm.name,
       email: tm.email,
       initials: tm.initials,
-      avatarColor: tm.avatarColor,
       role: 'Viewer',
     };
     setPeople((prev) => [...prev, newMember]);
@@ -167,10 +166,7 @@ function ShareModal({ open, docId, docTitle, onClose, onSave }: ShareModalProps)
                     onClick={() => handleAddMember(tm)}
                     className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-neutral-50 transition-colors text-left"
                   >
-                    <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                      style={{ backgroundColor: tm.avatarColor }}
-                    >
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-rd-avatar-bg text-rd-avatar-text text-xs font-bold flex-shrink-0">
                       {tm.initials}
                     </div>
                     <div className="min-w-0">
@@ -189,10 +185,7 @@ function ShareModal({ open, docId, docTitle, onClose, onSave }: ShareModalProps)
         <ul className="flex flex-col gap-3 mb-6 max-h-52 overflow-y-auto">
           {people.map((person) => (
             <li key={person.id} className="flex items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                style={{ backgroundColor: person.avatarColor }}
-              >
+              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-rd-avatar-bg text-rd-avatar-text text-xs font-bold flex-shrink-0">
                 {person.initials}
               </div>
               <div className="flex-1 min-w-0">

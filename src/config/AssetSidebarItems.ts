@@ -6,8 +6,8 @@ export const ASSET_NAV_ROUTES: Record<string, string> = {
   'Gap Identification & Prioritization': ROUTES.ASSET.GAP_IDENTIFICATION.ROOT,
 }
 
+
 export const ASSET_SIDEBAR_ITEMS: Record<string, string[]> = {
   'Chat & Agents':                       [],
   'Research Workspace':                  [],
-  'Gap Identification & Prioritization': [],
 }

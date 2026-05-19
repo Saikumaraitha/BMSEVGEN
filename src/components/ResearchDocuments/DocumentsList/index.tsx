@@ -29,7 +29,7 @@ function filterDocuments(
       (d) =>
         d.title.toLowerCase().includes(term) ||
         d.description.toLowerCase().includes(term) ||
-        d.owner.name.toLowerCase().includes(term),
+        (d.owner?.name ?? '').toLowerCase().includes(term),
     );
   }
 
@@ -79,7 +79,6 @@ function DocumentsList() {
     handleCardClick,
     handleCreateNew,
     handleCreateDocument,
-    handleGenerateGaps,
   } = createDocumentsListHandlers({
     setSearchParams,
     setSearchTerm,
@@ -120,7 +119,6 @@ function DocumentsList() {
                 document={doc}
                 onShare={handleShareOpen}
                 onDelete={handleDeleteRequest}
-                onGenerateGaps={handleGenerateGaps}
                 onOpen={handleCardClick}
               />
             ))}

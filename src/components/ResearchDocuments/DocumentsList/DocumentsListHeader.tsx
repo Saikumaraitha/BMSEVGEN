@@ -5,6 +5,8 @@ import {
   RD_SEARCH_PLACEHOLDER,
   RD_SORT_BY_LABEL,
 } from '../../../constants/researchDocuments';
+import SearchIcon from '../../../assets/icons/search.svg?react';
+import PlusIcon from '../../../assets/icons/plus.svg?react';
 
 interface DocumentsListHeaderProps {
   count: number;
@@ -29,7 +31,7 @@ function DocumentsListHeader({
   return (
     <div className="px-6 pt-5 pb-3 bg-white">
       {/* Title + controls row */}
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-center justify-between gap-3 mb-3">
         {/* title + count */}
         <div className="flex flex-col">
           <h1 className="text-xl font-bold font-ui text-brand-primary">{RD_PAGE_TITLE}</h1>
@@ -38,15 +40,18 @@ function DocumentsListHeader({
           </span>
         </div>
 
-        {/* References + Search + Create New */}
+        {/* Create New + Search */}
         <div className="flex items-center gap-3">
-          {/* References */}
+          {/* Create New */}
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-primary hover:text-brand-primary-dark transition-colors"
+            onClick={onCreateNew}
+            className="inline-flex items-center gap-2 pl-1 pr-4 py-1 rounded-full border border-brand-primary bg-white text-brand-primary-dark text-sm font-medium hover:bg-primary-tint-04 transition-colors"
           >
-            <i className="bi bi-book text-base" aria-hidden="true" />
-            <span>References</span>
+            <span className="w-6 h-6 rounded-full bg-exec-icon-bg text-brand-primary flex items-center justify-center flex-shrink-0">
+              <PlusIcon className="w-3.5 h-3.5" aria-hidden="true" />
+            </span>
+            {RD_CREATE_NEW_LABEL}
           </button>
 
           {/* Search */}
@@ -63,21 +68,9 @@ function DocumentsListHeader({
               className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors"
               aria-label="Search"
             >
-              <i className="bi bi-search text-xs" aria-hidden="true" />
+              <SearchIcon className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
-
-          {/* Create New */}
-          <button
-            type="button"
-            onClick={onCreateNew}
-            className="inline-flex items-center gap-2 pl-1 pr-4 py-1 rounded-full border border-brand-primary bg-white text-brand-primary-dark text-sm font-medium hover:bg-primary-tint-04 transition-colors"
-          >
-            <span className="w-6 h-6 rounded-full bg-exec-icon-bg text-brand-primary flex items-center justify-center flex-shrink-0">
-              <i className="bi bi-plus-lg text-xs" aria-hidden="true" />
-            </span>
-            {RD_CREATE_NEW_LABEL}
-          </button>
         </div>
       </div>
 

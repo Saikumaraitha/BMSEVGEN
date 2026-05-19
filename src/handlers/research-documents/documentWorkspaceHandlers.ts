@@ -52,6 +52,31 @@ export function createWorkspaceHandlers(deps: WorkspaceHandlerDeps) {
     );
   };
 
+  const handleDeleteNote = (id: string) => {
+    setNotes((prev) => {
+      const updated = prev.filter((n) => n.id !== id);
+      return updated.map((n, i) => ({ ...n, number: i + 1 }));
+    });
+    setComments((prev) => prev.filter((c) => c.noteId !== id));
+  };
+
+  const handleDuplicateNote = (note: ResearchNote) => {
+    setNotes((prev) => {
+      const idx = prev.findIndex((n) => n.id === note.id);
+      const copy: ResearchNote = {
+        ...note,
+        id: `note-${Date.now()}`,
+        number: prev.length + 1,
+        title: `${note.title} (Copy)`,
+        date: todayDocDate(),
+        source: 'manual',
+      };
+      const next = [...prev];
+      next.splice(idx + 1, 0, copy);
+      return next.map((n, i) => ({ ...n, number: i + 1 }));
+    });
+  };
+
   const handleAddToNotes = (content: string, query: string) => {
     setNotes((prev) => [
       {
@@ -85,28 +110,33 @@ export function createWorkspaceHandlers(deps: WorkspaceHandlerDeps) {
     setChatMessages((prev) => [...prev, userMsg, aiMsg]);
   };
 
-  const handlePostComment = (content: string, author: string, initials: string, color: string, textColor = '#ffffff') => {
+  const handlePostComment = (content: string, author: string, initials: string, noteId?: string, noteTitle?: string) => {
     const comment: DocumentComment = {
       id: `cmt-${Date.now()}`,
+      noteId: noteId ?? '',
+      noteTitle: noteTitle ?? '',
       author,
       authorInitials: initials,
-      authorColor: color,
-      authorTextColor: textColor,
       date: todayDocDate(),
       time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       content,
       replies: [],
     };
     setComments((prev) => [...prev, comment]);
+    if (noteId) {
+      setNotes((prev) =>
+        prev.map((n) => n.id === noteId ? { ...n, commentCount: (n.commentCount ?? 0) + 1 } : n),
+      );
+    }
   };
 
-  const handleReply = (parentId: string, content: string, author: string, initials: string, color: string, textColor = '#ffffff') => {
+  const handleReply = (parentId: string, content: string, author: string, initials: string) => {
     const reply: DocumentComment = {
       id: `cmt-${Date.now()}`,
+      noteId: '',
+      noteTitle: '',
       author,
       authorInitials: initials,
-      authorColor: color,
-      authorTextColor: textColor,
       date: todayDocDate(),
       time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       content,
@@ -128,6 +158,8 @@ export function createWorkspaceHandlers(deps: WorkspaceHandlerDeps) {
     handleCancelAddNote,
     handleSaveNote,
     handleEditNote,
+    handleDeleteNote,
+    handleDuplicateNote,
     handleAddToNotes,
     handleSendMessage,
     handlePostComment,
