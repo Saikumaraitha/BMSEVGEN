@@ -103,6 +103,7 @@ function ShareModal({ open, docId, docTitle, onClose, onSave }: ShareModalProps)
       name: tm.name,
       email: tm.email,
       initials: tm.initials,
+      avatarColor: tm.avatarColor,
       role: 'Viewer',
     };
     setPeople((prev) => [...prev, newMember]);

@@ -13,7 +13,7 @@ export const mockDocuments: ResearchDocument[] = [
     id: 'doc-001',
     title: 'Pumitamig Research Doc 1',
     accessType: 'My Doc',
-    owner: { name: 'Ava Sharma', initials: 'AS', role: 'Portfolio Strategy Lead' },
+    owner: { name: 'Ava Sharma', initials: 'AS', role: 'Portfolio Strategy Lead', avatarColor: 'bg-violet-500' },
     lastEdited: '2026-02-03',
     lastEditedBy: 'Ava Sharma',
     description:
@@ -25,7 +25,7 @@ export const mockDocuments: ResearchDocument[] = [
     id: 'doc-002',
     title: 'Pumitamig Research Doc 2',
     accessType: 'Can Edit',
-    owner: { name: 'Ryan Lee', initials: 'RL', role: 'Medical Strategy Partner' },
+    owner: { name: 'Ryan Lee', initials: 'RL', role: 'Medical Strategy Partner', avatarColor: 'bg-teal-500' },
     lastEdited: '2026-01-21',
     lastEditedBy: 'Ryan Lee',
     description:
@@ -37,7 +37,7 @@ export const mockDocuments: ResearchDocument[] = [
     id: 'doc-003',
     title: 'Pumitamig Research Doc 3',
     accessType: 'View Only',
-    owner: { name: 'Maya Kim', initials: 'MK', role: 'Clinical Evidence Lead' },
+    owner: { name: 'Maya Kim', initials: 'MK', role: 'Clinical Evidence Lead', avatarColor: 'bg-rose-500' },
     lastEdited: '2026-01-21',
     lastEditedBy: 'Maya Kim',
     description:
@@ -114,6 +114,8 @@ const doc1Comments: DocumentComment[] = [
     noteTitle: 'PD-L1 and VEGF pathway interaction in RCC',
     author: 'Maya Kim',
     authorInitials: 'MK',
+    authorColor: 'bg-rose-500',
+    authorTextColor: 'text-white',
     date: 'Apr 25',
     time: '10:41 AM',
     content:
@@ -126,6 +128,8 @@ const doc1Comments: DocumentComment[] = [
     noteTitle: 'PD-L1 and VEGF pathway interaction in RCC',
     author: 'Ava Sharma',
     authorInitials: 'AS',
+    authorColor: 'bg-violet-500',
+    authorTextColor: 'text-white',
     date: 'Apr 25',
     time: '11:25 AM',
     content:
@@ -138,6 +142,8 @@ const doc1Comments: DocumentComment[] = [
     noteTitle: 'Difference between NSCLC and RCC',
     author: 'Maya Kim',
     authorInitials: 'MK',
+    authorColor: 'bg-rose-500',
+    authorTextColor: 'text-white',
     date: 'Apr 26',
     time: '09:15 AM',
     content:
@@ -149,39 +155,39 @@ const doc1Comments: DocumentComment[] = [
 // ─── Team Members (searchable roster for adding to a doc) ────────────────────
 
 export const mockTeamMembers: TeamMember[] = [
-  { id: 'tm-001', name: 'Erica Jones',        email: 'e.jones@bms.com',       initials: 'EJ', jobRole: 'Portfolio Strategy Lead'   },
-  { id: 'tm-002', name: 'Andrew Smith',        email: 'a.smith@bms.com',       initials: 'AS', jobRole: 'Medical Strategy Partner'  },
-  { id: 'tm-003', name: 'Walker Texas Ranger', email: 'w.tex.ranger@bms.com',  initials: 'WR', jobRole: 'Clinical Evidence Lead'     },
-  { id: 'tm-004', name: 'Alberto Gunil',       email: 'a.gunil@bms.com',       initials: 'AG', jobRole: 'Regulatory Affairs Lead'    },
-  { id: 'tm-005', name: 'Ava Sharma',          email: 'ava.sharma@bms.com',    initials: 'AS', jobRole: 'Portfolio Strategy Lead'   },
-  { id: 'tm-006', name: 'Ryan Lee',            email: 'r.lee@bms.com',         initials: 'RL', jobRole: 'Medical Strategy Partner'  },
-  { id: 'tm-007', name: 'Maya Kim',            email: 'm.kim@bms.com',         initials: 'MK', jobRole: 'Clinical Evidence Lead'     },
-  { id: 'tm-008', name: 'Sarah Chen',          email: 's.chen@bms.com',        initials: 'SC', jobRole: 'Biomarker Strategy Lead'    },
-  { id: 'tm-009', name: 'Marcus Webb',         email: 'm.webb@bms.com',        initials: 'MW', jobRole: 'Evidence Generation Lead'   },
-  { id: 'tm-010', name: 'Lisa Park',           email: 'l.park@bms.com',        initials: 'LP', jobRole: 'Medical Affairs Director'   },
-  { id: 'tm-011', name: 'David Torres',        email: 'd.torres@bms.com',      initials: 'DT', jobRole: 'Clinical Development Lead'  },
-  { id: 'tm-012', name: 'Nina Patel',          email: 'n.patel@bms.com',       initials: 'NP', jobRole: 'Global Medical Director'    },
+  { id: 'tm-001', name: 'Erica Jones',        email: 'e.jones@bms.com',       initials: 'EJ', avatarColor: 'bg-indigo-500',  jobRole: 'Portfolio Strategy Lead'   },
+  { id: 'tm-002', name: 'Andrew Smith',        email: 'a.smith@bms.com',       initials: 'AS', avatarColor: 'bg-sky-500',     jobRole: 'Medical Strategy Partner'  },
+  { id: 'tm-003', name: 'Walker Texas Ranger', email: 'w.tex.ranger@bms.com',  initials: 'WR', avatarColor: 'bg-emerald-500', jobRole: 'Clinical Evidence Lead'     },
+  { id: 'tm-004', name: 'Alberto Gunil',       email: 'a.gunil@bms.com',       initials: 'AG', avatarColor: 'bg-amber-500',   jobRole: 'Regulatory Affairs Lead'    },
+  { id: 'tm-005', name: 'Ava Sharma',          email: 'ava.sharma@bms.com',    initials: 'AS', avatarColor: 'bg-violet-500',  jobRole: 'Portfolio Strategy Lead'   },
+  { id: 'tm-006', name: 'Ryan Lee',            email: 'r.lee@bms.com',         initials: 'RL', avatarColor: 'bg-teal-500',    jobRole: 'Medical Strategy Partner'  },
+  { id: 'tm-007', name: 'Maya Kim',            email: 'm.kim@bms.com',         initials: 'MK', avatarColor: 'bg-rose-500',    jobRole: 'Clinical Evidence Lead'     },
+  { id: 'tm-008', name: 'Sarah Chen',          email: 's.chen@bms.com',        initials: 'SC', avatarColor: 'bg-pink-500',    jobRole: 'Biomarker Strategy Lead'    },
+  { id: 'tm-009', name: 'Marcus Webb',         email: 'm.webb@bms.com',        initials: 'MW', avatarColor: 'bg-cyan-500',    jobRole: 'Evidence Generation Lead'   },
+  { id: 'tm-010', name: 'Lisa Park',           email: 'l.park@bms.com',        initials: 'LP', avatarColor: 'bg-lime-600',    jobRole: 'Medical Affairs Director'   },
+  { id: 'tm-011', name: 'David Torres',        email: 'd.torres@bms.com',      initials: 'DT', avatarColor: 'bg-orange-500',  jobRole: 'Clinical Development Lead'  },
+  { id: 'tm-012', name: 'Nina Patel',          email: 'n.patel@bms.com',       initials: 'NP', avatarColor: 'bg-fuchsia-500', jobRole: 'Global Medical Director'    },
 ];
 
 // ─── People with access per document ─────────────────────────────────────────
 
 export const mockDocShareMembers: Record<string, ShareMember[]> = {
   'doc-001': [
-    { id: 'tm-001', name: 'Erica Jones',        email: 'e.jones@bms.com',      initials: 'EJ', role: 'Owner'  },
-    { id: 'tm-002', name: 'Andrew Smith',        email: 'a.smith@bms.com',      initials: 'AS', role: 'Editor' },
-    { id: 'tm-003', name: 'Walker Texas Ranger', email: 'w.tex.ranger@bms.com', initials: 'WR', role: 'Editor' },
-    { id: 'tm-004', name: 'Alberto Gunil',       email: 'a.gunil@bms.com',      initials: 'AG', role: 'Viewer' },
+    { id: 'tm-001', name: 'Erica Jones',        email: 'e.jones@bms.com',      initials: 'EJ', avatarColor: 'bg-indigo-500',  role: 'Owner'  },
+    { id: 'tm-002', name: 'Andrew Smith',        email: 'a.smith@bms.com',      initials: 'AS', avatarColor: 'bg-sky-500',     role: 'Editor' },
+    { id: 'tm-003', name: 'Walker Texas Ranger', email: 'w.tex.ranger@bms.com', initials: 'WR', avatarColor: 'bg-emerald-500', role: 'Editor' },
+    { id: 'tm-004', name: 'Alberto Gunil',       email: 'a.gunil@bms.com',      initials: 'AG', avatarColor: 'bg-amber-500',   role: 'Viewer' },
   ],
   'doc-002': [
-    { id: 'tm-006', name: 'Ryan Lee',   email: 'r.lee@bms.com',      initials: 'RL', role: 'Owner'  },
-    { id: 'tm-007', name: 'Maya Kim',   email: 'm.kim@bms.com',      initials: 'MK', role: 'Editor' },
-    { id: 'tm-005', name: 'Ava Sharma', email: 'ava.sharma@bms.com', initials: 'AS', role: 'Viewer' },
-    { id: 'tm-008', name: 'Sarah Chen', email: 's.chen@bms.com',     initials: 'SC', role: 'Viewer' },
+    { id: 'tm-006', name: 'Ryan Lee',   email: 'r.lee@bms.com',      initials: 'RL', avatarColor: 'bg-teal-500',   role: 'Owner'  },
+    { id: 'tm-007', name: 'Maya Kim',   email: 'm.kim@bms.com',      initials: 'MK', avatarColor: 'bg-rose-500',   role: 'Editor' },
+    { id: 'tm-005', name: 'Ava Sharma', email: 'ava.sharma@bms.com', initials: 'AS', avatarColor: 'bg-violet-500', role: 'Viewer' },
+    { id: 'tm-008', name: 'Sarah Chen', email: 's.chen@bms.com',     initials: 'SC', avatarColor: 'bg-pink-500',   role: 'Viewer' },
   ],
   'doc-003': [
-    { id: 'tm-007', name: 'Maya Kim',    email: 'm.kim@bms.com',    initials: 'MK', role: 'Owner'  },
-    { id: 'tm-006', name: 'Ryan Lee',    email: 'r.lee@bms.com',    initials: 'RL', role: 'Viewer' },
-    { id: 'tm-009', name: 'Marcus Webb', email: 'm.webb@bms.com',   initials: 'MW', role: 'Editor' },
+    { id: 'tm-007', name: 'Maya Kim',    email: 'm.kim@bms.com',    initials: 'MK', avatarColor: 'bg-rose-500',  role: 'Owner'  },
+    { id: 'tm-006', name: 'Ryan Lee',    email: 'r.lee@bms.com',    initials: 'RL', avatarColor: 'bg-teal-500',  role: 'Viewer' },
+    { id: 'tm-009', name: 'Marcus Webb', email: 'm.webb@bms.com',   initials: 'MW', avatarColor: 'bg-cyan-500',  role: 'Editor' },
   ],
 };
 

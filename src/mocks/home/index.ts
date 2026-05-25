@@ -10,15 +10,37 @@ export const mockHomeData: HomeData = {
       lastUpdated:       "04/20/26",
       myAsset:           true,
       archived:          false,
+      indications: [
+        { id: "BMS-001-pso", name: "Psoriasis",   tags: ["Immunology", "Active Draft"],              lastUpdated: "01/25/26" },
+        { id: "BMS-001-psa", name: "PsA",         tags: ["Immunology", "New Insights", "In Refresh"], lastUpdated: "01/25/26" },
+      ],
     },
     {
       id:                "pumitamig",
       name:              "Pumitamig",
       tags:              ["Oncology", "New Insights"],
       mechanismOfAction: "Bispecific antibody targeting PD-L1 and VEGF-A",
-      lastUpdated:       "04/20/26",
+      lastUpdated:       "01/25/26",
       myAsset:           true,
       archived:          false,
+      indications: [
+        { id: "pumitamig-rcc",   name: "RCC",   tags: ["Oncology", "New Insights", "In Refresh"], lastUpdated: "01/25/26" },
+        { id: "pumitamig-tnbc",  name: "TNBC",  tags: ["Oncology", "Active Draft"],               lastUpdated: "01/25/26" },
+        { id: "pumitamig-nsclc", name: "NSCLC", tags: ["Oncology", "New Insights", "Active Draft"], lastUpdated: "01/25/26" },
+      ],
+    },
+    {
+      id:                "nivolumab",
+      name:              "Nivolumab",
+      tags:              ["Oncology"],
+      mechanismOfAction: "Bispecific antibody targeting PD-L1 and VEGF-A",
+      lastUpdated:       "01/25/26",
+      myAsset:           true,
+      archived:          false,
+      indications: [
+        { id: "nivolumab-rcc",   name: "RCC",   tags: ["Oncology", "New Insights", "In Refresh"], lastUpdated: "01/25/26" },
+        { id: "nivolumab-nsclc", name: "NSCLC", tags: ["Oncology", "In Refresh"],                 lastUpdated: "01/25/26" },
+      ],
     },
     {
       id:                "sample-asset",
@@ -28,6 +50,7 @@ export const mockHomeData: HomeData = {
       lastUpdated:       "04/20/26",
       myAsset:           false,
       archived:          true,
+      indications: [],
     },
   ],
 }

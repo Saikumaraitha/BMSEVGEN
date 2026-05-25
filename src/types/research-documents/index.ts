@@ -49,6 +49,7 @@ export interface ResearchNote {
   author: string;
   source: 'EvGenAI' | 'manual';
   originalQuery?: string;
+  commentCount?: number;
 }
 
 export interface ChatMessage {
@@ -61,6 +62,8 @@ export interface ChatMessage {
 
 export interface DocumentComment {
   id: string;
+  noteId: string;
+  noteTitle: string;
   author: string;
   authorInitials: string;
   authorColor: string;

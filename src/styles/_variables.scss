@@ -1,6 +1,7 @@
 :root {
   // --- Brand Colors ---
   --color-primary:         #BE2BBB;
+  --color-primary-rgb:     190 43 187;
   --color-primary-vivid:   #E43BE0;
   --color-primary-light:   #F8F3F2;
   --color-primary-dark:    #A1179E;
@@ -235,12 +236,14 @@
   --color-asset-tag-1-text:        #0E7490;
   --color-asset-tag-2-bg:          #FCE7F3;
   --color-asset-tag-2-text:        #BE185D;
-  --color-asset-tag-3-bg:          #EDE9FE;
-  --color-asset-tag-3-text:        #6D28D9;
-  --color-asset-tag-4-bg:          #FEF3C7;
-  --color-asset-tag-4-text:        #B45309;
+  --color-asset-tag-3-bg:          #FCEFD8;
+  --color-asset-tag-3-text:        #DE603A;
+  --color-asset-tag-4-bg:          #EAF2FB;
+  --color-asset-tag-4-text:        #4966DC;
   --color-asset-tag-5-bg:          #DCFCE7;
   --color-asset-tag-5-text:        #15803D;
+  --color-asset-indication-name: #425FD5;
+  --color-asset-mechanism: #756375;
 
   // --- Research Documents ---
   --color-rd-note-tag-bg: #e3f1fc;
@@ -327,4 +330,7 @@
   --font-medium:   500;
   --font-semibold: 600;
   --font-bold:     700;
+
+  // --- Typography: Font Weight ---
+  --asset-card-shadow: 0 4px 15px 0 rgba(140, 31, 138, 0.05);
 }
