@@ -107,7 +107,7 @@ function MessageBubble({ message, onAddToNotes }: MessageBubbleProps) {
   const isUser = message.role === 'user';
 
   const navigate = useNavigate();
-  const { assetId } = useParams<{ assetId: string }>();
+  const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>();
 
   const handleModalSelect = (documentId: string | 'new') => {
     setShowModal(false);
@@ -116,7 +116,7 @@ function MessageBubble({ message, onAddToNotes }: MessageBubbleProps) {
 
     const noteState = { pendingNote: { title: 'Chat Note', content: message.content } };
     const docId = documentId === 'new' ? 'new' : documentId;
-    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId: assetId ?? '', docId }), { state: noteState });
+    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId }), { state: noteState });
   };
 
   if (isUser) {

@@ -66,8 +66,8 @@ function Home() {
     sortBy,
   )
 
-  const handleViewDetails = (id: string) => {
-    navigate(buildPath(ROUTES.ASSET.CHAT_AGENTS, { assetId: id }))
+  const handleViewDetails = (assetId: string, indicationId: string) => {
+    navigate(buildPath(ROUTES.ASSET.CHAT_AGENTS, { assetId, indicationId }))
   }
 
   const handleCreatePlan = (assetId: string, indication: Indication) => {

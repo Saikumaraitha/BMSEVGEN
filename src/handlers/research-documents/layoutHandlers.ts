@@ -8,10 +8,11 @@ interface LayoutHandlerDeps {
   setSearchParams: SetURLSearchParams;
   navigate: NavigateFunction;
   assetId: string;
+  indicationId: string;
 }
 
 export function createLayoutHandlers(deps: LayoutHandlerDeps) {
-  const { setSidebarCollapsed, setSearchParams, navigate, assetId } = deps;
+  const { setSidebarCollapsed, setSearchParams, navigate, assetId, indicationId } = deps;
 
   const handleSidebarToggle = () => setSidebarCollapsed((prev) => !prev);
 
@@ -25,10 +26,10 @@ export function createLayoutHandlers(deps: LayoutHandlerDeps) {
     });
 
   const handleBackToList = () =>
-    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.ROOT, { assetId }));
+    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.ROOT, { assetId, indicationId }));
 
   const handleGenerateGaps = () =>
-    navigate(buildPath(ROUTES.ASSET.GAP_IDENTIFICATION.ROOT, { assetId }));
+    navigate(buildPath(ROUTES.ASSET.GAP_IDENTIFICATION.ROOT, { assetId, indicationId }));
 
   const handleAddNoteAction = () =>
     setSearchParams((prev) => {

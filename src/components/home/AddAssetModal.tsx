@@ -13,7 +13,7 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
   const [selectedAssetId, setSelectedAssetId] = useState('')
   const [indicationName, setIndicationName]   = useState('')
   const [selectedMoa, setSelectedMoa]         = useState('')
-  const [notes, setNotes]                     = useState('')
+  // const [notes, setNotes]                     = useState('')
   const [error, setError]                     = useState('')
 
   const selectedAsset = useMemo(
@@ -47,7 +47,7 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
     setSelectedAssetId('')
     setIndicationName('')
     setSelectedMoa('')
-    setNotes('')
+    // setNotes('')
     setError('')
     onClose()
   }
@@ -65,7 +65,7 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex-1" />
-          <h2 className="font-heading font-bold text-xl text-neutral-900 text-center flex-1">
+          <h2 className="font-heading font-bold text-xl text-neutral-900 text-center flex-1 text-nowrap">
             Create Asset Indication Plan
           </h2>
           <div className="flex-1 flex justify-end">
@@ -158,7 +158,8 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
           </div>
 
           {/* Notes */}
-          <div>
+          {/* Commented for now - need to get clearer idea on functionality. */}
+          {/* <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1.5">Notes</label>
             <textarea
               value={notes}
@@ -167,14 +168,14 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
               rows={4}
               className="w-full bg-neutral-100 rounded-lg px-3 py-2.5 text-sm text-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 resize-none border-0"
             />
-          </div>
+          </div> */}
 
           {/* Validation error */}
           {error && <p className="text-xs text-red-500 text-center -mt-2">{error}</p>}
 
           {/* Note text */}
           <p className="text-xs text-center text-neutral-500 leading-relaxed">
-            <span className="font-semibold text-brand-primary">Please note:</span>{' '}
+            <span className="font-semibold text-brand-primary-deep">Please note:</span>{' '}
             Asset Indication specific context generation may take up to &lt;X&gt; days.
             <br />
             You will receive an email notification once the data is available for review.
@@ -185,13 +186,13 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
             <button
               type="button"
               onClick={onClose}
-              className="px-8 py-2.5 rounded-lg border border-red-500 text-red-500 text-sm font-medium hover:bg-red-50 transition-colors"
+              className="px-8 py-2.5 rounded-md font-heading border border-cancel text-cancel text-sm font-medium hover:bg-red-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-8 py-2.5 rounded-lg bg-brand-primary text-white text-sm font-medium hover:bg-brand-primary-dark transition-colors"
+              className="px-8 py-2 rounded-md font-heading asset-create-btn text-white text-sm font-medium hover:bg-brand-primary-dark transition-colors"
             >
               Create
             </button>

@@ -41,7 +41,7 @@ function filterDocuments(
 }
 
 function DocumentsList() {
-  const { assetId = '' } = useParams<{ assetId: string }>();
+  const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setDocCounts } = useResearchDocumentsContext();
@@ -79,6 +79,7 @@ function DocumentsList() {
     handleCardClick,
     handleCreateNew,
     handleCreateDocument,
+    handleGenerateGaps,
   } = createDocumentsListHandlers({
     setSearchParams,
     setSearchTerm,
@@ -90,6 +91,7 @@ function DocumentsList() {
     setIsCreating,
     navigate,
     assetId,
+    indicationId,
   });
 
   const filteredDocuments = filterDocuments(documents, activeFilter, searchTerm, sortBy);
@@ -112,7 +114,7 @@ function DocumentsList() {
             <p className="text-sm">No documents found</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {filteredDocuments.map((doc) => (
               <DocumentCard
                 key={doc.id}
@@ -120,6 +122,7 @@ function DocumentsList() {
                 onShare={handleShareOpen}
                 onDelete={handleDeleteRequest}
                 onOpen={handleCardClick}
+                onGenerateGaps={handleGenerateGaps}
               />
             ))}
           </div>

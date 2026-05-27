@@ -1,10 +1,10 @@
 :root {
   // --- Brand Colors ---
   --color-primary:         #BE2BBB;
-  --color-primary-rgb:     190 43 187;
   --color-primary-vivid:   #E43BE0;
   --color-primary-light:   #F8F3F2;
   --color-primary-dark:    #A1179E;
+  --color-primary-deep:    #B500B1;
 
   --color-secondary:       #7C3AED;
   --color-secondary-light: #A78BFA;
@@ -105,6 +105,15 @@
   --color-quadrant-urgent-bg:       #F5F3FF;
   --color-quadrant-lower-bg:        #FEF2F2;
 
+  // --- Gap Priority & Urgency Badges ---
+  --color-gap-priority-high-bg:    #16A34A;
+  --color-gap-priority-medium-bg:  #F59E0B;
+  --color-gap-priority-low-bg:     #F3F4F6;
+  --color-gap-priority-low-text:   #6B7280;
+  --color-gap-urgency-bg:          #FCE7F3;
+  --color-gap-urgency-text:        #EC4899;
+
+
   // --- Table ---
   --color-table-header-bg:        var(--color-primary-dark);
   --color-table-sticky-row-even:  #F9EDF8;
@@ -135,12 +144,14 @@
   --color-text-dark:               #282828;
   --color-text-mid:                #4F4A4A;
   --color-text-muted:              #555555;
+  --color-text-subtle:             #5F5F5F;
   --color-text-body:               #404040;
 
   // --- Backgrounds ---
   --color-bg-row-alt:              #F9F9F9;
   --color-bg-filter-bar:           #F7F7F7;
   --color-bg-stat-card-wrap:       rgba(217, 197, 196, 0.2);
+  --color-agent-header-bg: linear-gradient(90deg, #FFDFFE 0%, #FFC9FE 100%);
 
   // --- Executive Summary ---
   --color-exec-icon-bg:            #F8EAF8;
@@ -150,6 +161,8 @@
   // --- Primary Tints ---
   --color-primary-tint-04:         rgba(190, 43, 187, 0.04);
   --color-primary-tint-10:         rgba(190, 43, 187, 0.1);
+  --color-primary-tint-17:         rgba(190, 43, 187, 0.17);
+  --color-primary-tint-25:         rgba(190, 43, 187, 0.25);
   --color-primary-tint-45:         rgba(190, 43, 187, 0.45);
 
   // --- Secondary Button Tokens ---
@@ -158,6 +171,7 @@
   --btn-secondary-border:      var(--color-primary);
   --btn-secondary-bg-hover:    var(--color-primary-light);
   --btn-secondary-text-hover:  #ffffff;
+  --btn-cancel:                #D70000;
 
   // --- Error / Form State Colors ---
   --color-error-bg:              #FEF2F2;
@@ -174,9 +188,14 @@
 
   // --- SubNav / Tab Extras ---
   --color-tab-inactive:          #595454;
-  --color-tab-inactive-90:       rgba(89, 84, 84, 0.9);
+  --color-tab-inactive-90:       #595454E5;
+  --color-subnav-asset:          #5E4F4B;
   --color-subnav-meta:           #9F837C;
   --color-text-near-black:       #131313;
+  --color-topbar-divider:        #D2C0BB;
+  --color-topbar-text:           #AD985E;
+  --color-topbar-mechanism:      #756375;
+  --color-topbar-ai-badge-bg:    #FFF8E2;
 
   // --- Section UI ---
   --color-section-divider:       #F9A8D4;
@@ -206,6 +225,14 @@
   --color-si-card-teal-bg:       #F0FDFA;
   --color-si-card-teal-border:   #99F6E4;
   --color-si-card-teal-badge:    #14B8A6;
+
+  // --- Gap Priority & Urgency Badges ---
+  --color-gap-priority-high-bg:    #16A34A;
+  --color-gap-priority-medium-bg:  #F59E0B;
+  --color-gap-priority-low-bg:     #F3F4F6;
+  --color-gap-priority-low-text:   #6B7280;
+  --color-gap-urgency-bg:          #FCE7F3;
+  --color-gap-urgency-text:        #EC4899;
 
   // --- KDM Priority Badges ---
   --color-kdm-priority-high-bg:    #FED7AA;
@@ -242,8 +269,33 @@
   --color-asset-tag-4-text:        #4966DC;
   --color-asset-tag-5-bg:          #DCFCE7;
   --color-asset-tag-5-text:        #15803D;
-  --color-asset-indication-name: #425FD5;
-  --color-asset-mechanism: #756375;
+
+  // --- Agent Workspace Panel ---
+  --color-agent-subtitle:        #AE6BAC;
+  --color-agent-select-label:    #4D4D4D;
+  --color-agent-card-border:     #CEC3C0;
+  --color-agent-category-text:   #2F2F2F;
+  --color-agent-card-expanded-bg: #F7E5F7;
+  --color-agent-checkbox-border:  #B9AAA7;
+  --color-agent-checked-title:    #8D118B;
+
+  // --- Success Banner ---
+  --color-success-banner-bg:  #E5F8DB;
+  --color-success-text:       #378214;
+  --color-run-again:          #39990D;
+  --gradient-success-check:   linear-gradient(to bottom, #3DA10F, #2C710C);
+  --gradient-agent-header:    linear-gradient(to right, #FFDFFE, #FFC9FE);
+  --gradient-btn-create:      linear-gradient(180deg, #E43BE0 0%, #B500B1 100%);
+
+  // --- Sidebar ---
+  --color-sidebar-border: #BFBABA;
+
+  // --- Chat Input ---
+  --color-chat-placeholder: rgba(58, 58, 58, 0.75);
+
+  // --- Suggested Prompts Cards ---
+  --color-prompt-card-border: #B8B8B8;
+  --color-prompt-card-text:   #2F2F2F;
 
   // --- Research Documents ---
   --color-rd-note-tag-bg: #e3f1fc;
@@ -308,12 +360,15 @@
   --font-ui:      'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
 
   // --- Typography: Font Size ---
+  --text-10:           0.625rem;
+  --text-9-5:          0.59375rem;
   --text-3xs:          0.5625rem;
   --text-placeholder-sm: 0.72875rem;
   --text-2xs:          0.6875rem;
   --text-icon-sm:      0.73875rem;
   --text-xs:           0.75rem;
   --text-body-sm:      0.9rem;
+  --text-13:           0.8125rem;
   --text-sm:           0.875rem;
   --text-card-title:   0.9375rem;
   --text-detail-link:  0.625rem;
@@ -326,11 +381,9 @@
   --text-4xl:          2.25rem;
 
   // --- Typography: Font Weight ---
+  --font-light:    300;
   --font-normal:   400;
   --font-medium:   500;
   --font-semibold: 600;
   --font-bold:     700;
-
-  // --- Typography: Font Weight ---
-  --asset-card-shadow: 0 4px 15px 0 rgba(140, 31, 138, 0.05);
 }

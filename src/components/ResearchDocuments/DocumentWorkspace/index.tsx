@@ -14,7 +14,7 @@ import ShareModal from '../DocumentsList/ShareModal';
 import DeleteDocumentModal from './DeleteDocumentModal';
 
 function DocumentWorkspace() {
-  const { assetId = '', docId = '' } = useParams<{ assetId: string; docId: string }>();
+  const { assetId = '', indicationId = '', docId = '' } = useParams<{ assetId: string; indicationId: string; docId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -184,7 +184,7 @@ function DocumentWorkspace() {
   };
 
   useEffect(() => {
-    const backPath = buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.ROOT, { assetId });
+    const backPath = buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.ROOT, { assetId, indicationId });
     setOnSaveAndExit(() => () => {
       handleSaveChanges();
       navigate(backPath);
@@ -202,7 +202,7 @@ function DocumentWorkspace() {
   const handleDeleteDoc = () => setShowDeleteModal(true);
   const handleDeleteConfirm = () => {
     setShowDeleteModal(false);
-    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.ROOT, { assetId }));
+    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.ROOT, { assetId, indicationId }));
   };
 
   const handleAddNoteClick = () => {

@@ -1,13 +1,15 @@
 import { useRef, useEffect, useState } from 'react';
 import type { AgentChatMessage, ChatMode, FrequentQuery } from '../../types/chat-agents';
 import MessageBubble from './MessageBubble';
+import ChatGroupIcon from '../../assets/icons/ChatGroup.svg?react';
+import SendIcon from '../../assets/icons/Send.svg?react';
 
 interface ChatWindowProps {
-  userName: string;
   messages: AgentChatMessage[];
   frequentQueries: FrequentQuery[];
   onSendMessage: (text: string, mode: ChatMode) => void;
   onAddToNotes: (message: AgentChatMessage) => void;
+  onClearChat: () => void;
 }
 
 const PREVIEW_FAQ_COUNT = 4;
@@ -31,7 +33,7 @@ function SeeAllModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-neutral-900">Frequently Asked Queries</h2>
+          <h2 className="text-base font-bold text-neutral-900">Suggested Prompts</h2>
           <button
             type="button"
             onClick={onClose}
@@ -59,50 +61,12 @@ function SeeAllModal({
   );
 }
 
-function ModeToggle({
-  mode,
-  onChange,
-}: {
-  mode: ChatMode;
-  onChange: (m: ChatMode) => void;
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-neutral-500">Response style:</span>
-      <button
-        type="button"
-        onClick={() => onChange('concise')}
-        className={[
-          'px-3 py-1 rounded-full text-xs font-semibold transition-colors',
-          mode === 'concise'
-            ? 'bg-brand-primary text-white'
-            : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100',
-        ].join(' ')}
-      >
-        Concise
-      </button>
-      <button
-        type="button"
-        onClick={() => onChange('detailed')}
-        className={[
-          'px-3 py-1 rounded-full text-xs font-semibold transition-colors',
-          mode === 'detailed'
-            ? 'bg-brand-primary text-white'
-            : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100',
-        ].join(' ')}
-      >
-        Detailed
-      </button>
-    </div>
-  );
-}
-
 function ChatWindow({
-  userName,
   messages,
   frequentQueries,
   onSendMessage,
   onAddToNotes,
+  onClearChat,
 }: ChatWindowProps) {
   const [inputText, setInputText] = useState('');
   const [mode, setMode] = useState<ChatMode>('concise');
@@ -147,44 +111,89 @@ function ChatWindow({
 
   const previewQueries = frequentQueries.slice(0, PREVIEW_FAQ_COUNT);
 
+  // ── Mode pills + send button row (shared inside the input box) ──────────────
+  const inputFooter = (
+    <div className="flex items-center justify-between mt-3">
+      {/* Segmented control — shared pill track with active fill */}
+      {/* Unified segmented control — single pill track, active tab fills inside */}
+      {/* Unified segmented control — fixed height so both tabs are always equal */}
+      <div className="flex items-stretch font-heading bg-exec-icon-bg rounded-full overflow-hidden h-7">
+        <button
+          type="button"
+          onClick={() => setMode('concise')}
+          className={[
+            'px-5 h-full rounded-full text-xs font-semibold transition-colors flex items-center',
+            mode === 'concise'
+              ? 'bg-brand-primary text-white'
+              : 'text-brand-primary font-normal text-2xs',
+          ].join(' ')}
+        >
+          Concise
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode('detailed')}
+          className={[
+            'px-5 h-full rounded-full transition-colors flex items-center',
+            mode === 'detailed'
+              ? 'bg-brand-primary text-white text-xs font-semibold'
+              : 'text-brand-primary font-normal text-2xs',
+          ].join(' ')}
+        >
+          Detailed
+        </button>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => handleSend()}
+        disabled={!inputText.trim()}
+        className={[
+          'flex-shrink-0 transition-opacity',
+          inputText.trim() ? 'opacity-100 cursor-pointer' : 'opacity-40 cursor-not-allowed',
+        ].join(' ')}
+        aria-label="Send message"
+      >
+        <SendIcon className="w-8 h-8" aria-hidden="true" />
+      </button>
+    </div>
+  );
+
+  // ── Shared input box ────────────────────────────────────────────────────────
   const inputBox = (
-    <div className="flex flex-col border border-neutral-200 rounded-2xl px-4 pt-3 pb-2 shadow-sm focus-within:border-brand-primary/50 transition-colors bg-white">
+    <div className="w-full flex flex-col input-gradient-border rounded-2xl bg-white px-2 pt-3 pb-1">
       <textarea
         ref={textareaRef}
         value={inputText}
         onChange={handleTextareaChange}
         onKeyDown={handleKeyDown}
-        rows={2}
-        placeholder="Ask anything about insights, actions, or related clinical topics..."
-        className="w-full resize-none text-sm text-neutral-800 placeholder-neutral-400 outline-none bg-transparent leading-relaxed"
+        rows={3}
+        placeholder="Ask a question or describe what you need..."
+        className="w-full resize-none text-sm text-neutral-800 outline-none bg-transparent leading-relaxed placeholder:text-chat-placeholder placeholder:font-sans placeholder:font-light placeholder:italic placeholder:text-sm"
         style={{ maxHeight: '120px' }}
       />
-      <div className="flex justify-end mt-2">
-        <button
-          type="button"
-          onClick={() => handleSend()}
-          disabled={!inputText.trim()}
-          className={[
-            'w-8 h-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0',
-            inputText.trim()
-              ? 'bg-brand-primary text-white hover:bg-brand-primary-dark'
-              : 'bg-brand-primary/30 text-white',
-          ].join(' ')}
-          aria-label="Send message"
-        >
-          <i className="bi bi-send-fill text-xs" aria-hidden="true" />
-        </button>
-      </div>
+      {inputFooter}
     </div>
   );
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-rd-body-bg">
+    <div className="flex-1 flex flex-col overflow-hidden bg-white relative">
       {hasMessages ? (
         /* ── Conversation view ── */
         <>
+          {/* Top bar with Clear Chat */}
+          <div className="flex-shrink-0 flex items-center justify-end px-6 py-3 absolute right-0">
+            <button
+              type="button"
+              onClick={onClearChat}
+              className="px-6 py-2 rounded-md border border-brand-primary bg-white text-sm font-medium text-brand-primary hover:bg-brand-primary/5 transition-colors"
+            >
+              Clear Chat
+            </button>
+          </div>
+
           <div className="flex-1 overflow-y-auto scrollbar-thin-styled">
-            <div className="px-6 py-5 flex flex-col gap-5 min-h-full">
+            <div className="px-6 py-3 flex flex-col gap-5 min-h-full">
               {messages.map((msg) => (
                 <MessageBubble
                   key={msg.id}
@@ -197,51 +206,38 @@ function ChatWindow({
           </div>
 
           {/* Fixed bottom input bar */}
-          <div className="flex-shrink-0 border-t border-neutral-200 bg-white px-5 py-4">
-            <div className="flex justify-end mb-2">
-              <ModeToggle mode={mode} onChange={setMode} />
-            </div>
+          <div className="flex-shrink-0 bg-primary-light px-6 py-4">
             {inputBox}
           </div>
         </>
       ) : (
-        /* ── Welcome / empty state — all content scrollable ── */
+        /* ── Welcome / empty state ── */
         <div className="flex-1 overflow-y-auto scrollbar-thin-styled">
-          <div className="flex flex-col items-center px-6 pt-10 pb-10 w-full max-w-3xl mx-auto">
+          <div className="flex flex-col min-h-full px-6 py-12">
 
-            {/* Avatar + greeting + title */}
-            <div className="flex flex-col items-center gap-1 mb-8 text-center">
-              <div className="w-14 h-14 rounded-full bg-brand-primary flex items-center justify-center mb-2">
-                <i className="bi bi-stars text-white text-2xl" aria-hidden="true" />
-              </div>
-              <p className="text-sm text-neutral-500">Hi {userName}</p>
-              <h1 className="text-2xl font-bold text-neutral-900 leading-snug max-w-md">
-                Welcome to EvGen Studio Chat. Where should we start?
+            {/* Header — always centered across full chat width */}
+            <div className="w-full flex flex-col items-center text-center mb-8">
+              <ChatGroupIcon className="w-10 h-10 mb-3" aria-hidden="true" />
+
+              <h1 className="text-2xl font-bold font-ui text-brand-primary-dark">
+                Welcome to EvGen Studio.
               </h1>
+
+              <p className="text-[22px] font-normal font-ui text-text-body">
+                What would you like to work on?
+              </p>
             </div>
 
-            {/* Response style + textarea */}
-            <div className="w-full mb-8">
-              <div className="flex justify-end mb-2">
-                <ModeToggle mode={mode} onChange={setMode} />
-              </div>
+            {/* Input box — centered, max-width constrained */}
+            <div className="w-5/6 mx-auto">
               {inputBox}
             </div>
 
-            {/* Frequently Asked Queries */}
-            <div className="w-full">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-neutral-800">
-                  Frequently Asked Queries
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setShowSeeAll(true)}
-                  className="text-sm font-semibold text-brand-primary hover:underline transition-colors"
-                >
-                  See All
-                </button>
-              </div>
+            {/* Suggested Prompts — full chat-window width, edge-to-edge with px-6 padding */}
+            <div className="w-full mt-14 px-2">
+              <p className="text-xs font-semibold font-sans text-brand-primary-dark mb-3">
+                Suggested Prompts
+              </p>
 
               <div className="grid grid-cols-2 gap-3">
                 {previewQueries.map((query) => (
@@ -249,15 +245,16 @@ function ChatWindow({
                     key={query.id}
                     type="button"
                     onClick={() => handleFaqSelect(query)}
-                    className="text-left p-4 bg-white border border-neutral-200 rounded-xl hover:border-brand-primary hover:bg-brand-primary/5 transition-all group shadow-sm"
+                    className="text-left px-4 py-3 bg-white border border-prompt-card-border rounded-xl hover:border-brand-primary hover:bg-brand-primary/5 transition-all group"
                   >
-                    <p className="text-xs text-neutral-700 leading-relaxed group-hover:text-brand-primary transition-colors">
+                    <p className="text-13 font-normal font-sans text-prompt-card-text leading-relaxed group-hover:text-brand-primary transition-colors">
                       {query.question}
                     </p>
                   </button>
                 ))}
               </div>
             </div>
+
           </div>
         </div>
       )}

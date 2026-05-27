@@ -11,7 +11,7 @@ interface ComingSoonAssetPageProps {
 }
 
 function ComingSoonAssetPage({ activeTab }: ComingSoonAssetPageProps) {
-  const { assetId = '' } = useParams<{ assetId: string }>()
+  const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>()
   const navigate = useNavigate()
   const [asset, setAsset] = useState<Asset>()
 
@@ -24,6 +24,7 @@ function ComingSoonAssetPage({ activeTab }: ComingSoonAssetPageProps) {
       <AssetLayout
         assetName={asset?.name}
         activeTab={activeTab}
+        indicationName={asset?.indications.find(i => i.id === indicationId)?.name}
         lastUpdated={asset?.lastUpdated}
         onBack={() => navigate(ROUTES.HOME)}
       >

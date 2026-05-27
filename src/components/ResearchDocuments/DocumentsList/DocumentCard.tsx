@@ -11,17 +11,18 @@ interface DocumentCardProps {
   onShare: (docId: string) => void;
   onDelete: (doc: ResearchDocument) => void;
   onOpen: (docId: string) => void;
+  onGenerateGaps: (docId: string) => void;
 }
 
 const ACCESS_STYLES: Record<string, string> = {
   'My Doc':    'bg-badge-congress-bg text-rd-tag-my-doc-text',
-  'Can Edit':  'bg-badge-planning-bg text-rd-tag-can-edit-text',
+  'Can Edit':  'bg-badge-experts-bg text-badge-experts-text',
   'View Only': 'bg-rd-tag-view-only-bg text-rd-tag-view-only-text',
 };
 
 function DocumentCard(props: DocumentCardProps) {
   const doc = props.document;
-  const { onShare, onDelete, onOpen } = props;
+  const { onShare, onDelete, onOpen, onGenerateGaps } = props;
 
   const isViewOnly = doc.accessType === 'View Only';
   const isMyDoc = doc.accessType === 'My Doc';
@@ -46,14 +47,16 @@ function DocumentCard(props: DocumentCardProps) {
   };
 
   return (
-    <div className="bg-white border border-rd-card-border rounded-xl p-4 hover:shadow-sm transition-shadow">
+    <div
+      className="bg-white border border-rd-card-border rounded-xl p-5 shadow-sm cursor-pointer hover:border-brand-primary hover:bg-[#faf5fa] hover:shadow-md transition-all"
+      onClick={() => onOpen(doc.id)}
+    >
       {/* Row 1: title + badge (left) · action icons (right) */}
       <div className="flex items-center justify-between gap-3 mb-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <button
             type="button"
-            onClick={() => onOpen(doc.id)}
-            className="text-sm font-semibold font-sans text-brand-primary hover:underline text-left truncate"
+            className="text-[#A1179E] font-[Inter] text-[16px] not-italic font-bold leading-normal"
           >
             {doc.title}
           </button>
@@ -66,7 +69,6 @@ function DocumentCard(props: DocumentCardProps) {
           {!isViewOnly && (
             <button
               type="button"
-              onClick={() => onOpen(doc.id)}
               className="w-7 h-7 flex items-center justify-center rounded-full border border-rd-card-border text-rd-section-label hover:bg-neutral-100 hover:text-brand-primary transition-colors"
               aria-label="Edit"
             >
@@ -78,7 +80,7 @@ function DocumentCard(props: DocumentCardProps) {
           <div ref={exportRef} className="relative">
             <button
               type="button"
-              onClick={() => setShowExport((prev) => !prev)}
+              onClick={(e) => { e.stopPropagation(); setShowExport((prev) => !prev); }}
               className="w-7 h-7 flex items-center justify-center rounded-full border border-rd-card-border text-rd-section-label hover:bg-neutral-100 transition-colors"
               aria-label="Export"
             >
@@ -88,7 +90,7 @@ function DocumentCard(props: DocumentCardProps) {
               <div className="absolute right-0 top-full mt-1 bg-white border border-neutral-200 rounded-xl shadow-lg z-10 w-44 overflow-hidden">
                 <button
                   type="button"
-                  onClick={() => handleExportSelect('pdf')}
+                  onClick={(e) => { e.stopPropagation(); handleExportSelect('pdf'); }}
                   className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-sans text-neutral-700 hover:bg-neutral-50 transition-colors"
                 >
                   <PdfIcon className="w-4 h-4 text-red-600 flex-shrink-0" aria-hidden="true" />
@@ -96,7 +98,7 @@ function DocumentCard(props: DocumentCardProps) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleExportSelect('word')}
+                  onClick={(e) => { e.stopPropagation(); handleExportSelect('word'); }}
                   className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-sans text-neutral-700 hover:bg-neutral-50 transition-colors"
                 >
                   <i className="bi bi-file-earmark-word text-blue-600 flex-shrink-0" aria-hidden="true" />
@@ -108,7 +110,7 @@ function DocumentCard(props: DocumentCardProps) {
 
           <button
             type="button"
-            onClick={() => onShare(doc.id)}
+            onClick={(e) => { e.stopPropagation(); onShare(doc.id); }}
             className="w-7 h-7 flex items-center justify-center rounded-full border border-rd-card-border text-rd-section-label hover:bg-neutral-100 hover:text-brand-primary transition-colors"
             aria-label="Share"
           >
@@ -117,7 +119,7 @@ function DocumentCard(props: DocumentCardProps) {
           {isMyDoc && (
             <button
               type="button"
-              onClick={() => onDelete(doc)}
+              onClick={(e) => { e.stopPropagation(); onDelete(doc); }}
               className="w-7 h-7 flex items-center justify-center rounded-full border border-rd-card-border text-rd-trash hover:bg-red-50 transition-colors"
               aria-label="Delete"
             >
@@ -141,13 +143,24 @@ function DocumentCard(props: DocumentCardProps) {
         </span>
       </div>
 
-      {/* Row 3: description */}
-      {doc.description && (
-        <p className="text-xs font-normal font-sans text-rd-description leading-relaxed line-clamp-2 mb-3">
-          {doc.description}
-        </p>
-      )}
-
+      {/* Row 3: description + Generate Gaps */}
+      <div className="flex items-end justify-between gap-3 mt-2">
+        {doc.description ? (
+          <p className="text-xs font-normal font-sans text-rd-description leading-relaxed line-clamp-2 flex-1">
+            {doc.description}
+          </p>
+        ) : (
+          <span className="flex-1" />
+        )}
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onGenerateGaps(doc.id); }}
+          disabled={isViewOnly}
+          className="px-4 py-1.5 rounded border border-brand-primary text-brand-primary text-xs font-medium transition-colors hover:bg-primary-tint-04 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+        >
+          Generate Gaps
+        </button>
+      </div>
     </div>
   );
 }

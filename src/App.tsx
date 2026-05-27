@@ -15,18 +15,21 @@ function App() {
       <Route path={S.HOME} element={<Home />} />
 
       <Route path={S.ASSET_ROOT}>
+        <Route path={S.INDICATION}>
 
-        {/* Chat & Agents */}
-        <Route path={S.CHAT_AGENTS} element={<ChatAgents />} />
+          {/* Chat & Agents */}
+          <Route path={S.CHAT_AGENTS} element={<ChatAgents />} />
 
-        {/* Research Workspace */}
-        <Route path={S.RESEARCH_DOCUMENTS} element={<ResearchDocuments />}>
-          <Route index element={<ResearchDocumentsList />} />
-          <Route path={S.DOC_ID} element={<DocumentWorkspace />} />
+          {/* Research Workspace */}
+          <Route path={S.RESEARCH_DOCUMENTS} element={<ResearchDocuments />}>
+            <Route index element={<ResearchDocumentsList />} />
+            <Route path={S.DOC_ID} element={<DocumentWorkspace />} />
+          </Route>
+
+          {/* Gap Identification & Prioritization — Coming Soon */}
+          <Route path={S.GAP_IDENTIFICATION} element={<ComingSoonAssetPage activeTab="Gap Identification & Prioritization" />} />
+
         </Route>
-
-        {/* Gap Identification & Prioritization — Coming Soon */}
-        <Route path={S.GAP_IDENTIFICATION} element={<ComingSoonAssetPage activeTab="Gap Identification & Prioritization" />} />
 
         <Route path="*" element={<Navigate to={S.HOME} replace />} />
       </Route>

@@ -8,6 +8,7 @@ interface AssetLayoutProps {
   children: ReactNode;
   assetName?: string;
   activeTab?: string;
+  indicationName?: string;
   lastUpdated?: string;
   onBack?: () => void;
   activeSidebarItem?: string;
@@ -18,6 +19,7 @@ function AssetLayout({
   children,
   assetName = 'Asset',
   activeTab = 'Chat & Agents',
+  indicationName,
   lastUpdated,
   onBack,
   activeSidebarItem,
@@ -42,6 +44,7 @@ function AssetLayout({
       <AssetSubNav
         assetName={assetName}
         activeTab={activeTab}
+        indicationName={indicationName}
         lastUpdated={lastUpdated}
         onBack={onBack}
       />

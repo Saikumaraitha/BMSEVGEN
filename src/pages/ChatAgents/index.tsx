@@ -5,86 +5,67 @@ import AssetSubNav from '../../components/AssetSubNav/AssetSubNav';
 import ChatAgentsSidebar from '../../components/ChatAgents/ChatAgentsSidebar';
 import ChatWindow from '../../components/ChatAgents/ChatWindow';
 import AgentMarketplace from '../../components/ChatAgents/AgentMarketplace';
-import {
-  mockProjects,
-  mockRecentChats,
-  mockAgentCategories,
-  mockChatMessages,
-  mockFrequentQueries,
-  mockAgentResponseContent,
-} from '../../mocks/chat-agents';
-import type { AgentChatMessage, AgentExecutionState, ChatMode, ChatProject } from '../../types/chat-agents';
+import type {
+  AgentChatMessage,
+  AgentCategory,
+  AgentExecutionState,
+  ChatMode,
+  ChatProject,
+  FrequentQuery,
+  RecentChat,
+} from '../../types/chat-agents';
 import type { Asset } from '../../types/home';
 import { getAssetDetails } from '../../services/home';
+import {
+  getChatProjects,
+  getRecentChats,
+  getAgentCategories,
+  getChatMessages,
+  getFrequentQueries,
+  createProject,
+  createChat,
+  sendChatMessage,
+  runAgent as runAgentService,
+  addMessageToNotes as addMessageToNotesService,
+} from '../../services/chat-agents';
 import { ROUTES } from '../../constants/routes';
 
-let nextMsgId = mockChatMessages.length + 1;
-let nextProjectId = mockProjects.length + 1;
-
-const MOCK_USER_NAME = 'Ava Sharma';
-
-function getAgentById(agentId: string) {
-  for (const cat of mockAgentCategories) {
-    const agent = cat.agents.find((a) => a.id === agentId);
-    if (agent) return agent;
-  }
-  return null;
-}
+const USER_INITIALS = 'AS';
 
 function ChatAgents() {
   const navigate = useNavigate();
-  const { assetId = '' } = useParams<{ assetId: string }>();
+  const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>();
+
   const [asset, setAsset] = useState<Asset>();
-
-  useEffect(() => {
-    getAssetDetails(assetId).then(setAsset);
-  }, [assetId]);
-
-  const [projects, setProjects] = useState<ChatProject[]>(mockProjects);
+  const [projects, setProjects] = useState<ChatProject[]>([]);
+  const [recentChats, setRecentChats] = useState<RecentChat[]>([]);
+  const [agentCategories, setAgentCategories] = useState<AgentCategory[]>([]);
+  const [frequentQueries, setFrequentQueries] = useState<FrequentQuery[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [messages, setMessages] = useState<AgentChatMessage[]>([]);
   const [selectedAgentIds, setSelectedAgentIds] = useState<Set<string>>(new Set());
   const [executionStates, setExecutionStates] = useState<Record<string, AgentExecutionState>>({});
 
-  const addMessage = useCallback((msg: Omit<AgentChatMessage, 'id' | 'timestamp'>) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        ...msg,
-        id: `amsg-${String(nextMsgId++).padStart(3, '0')}`,
-        timestamp: new Date().toISOString(),
-      },
-    ]);
+  useEffect(() => {
+    getAssetDetails(assetId).then(setAsset);
+    getChatProjects(assetId).then(setProjects);
+    getRecentChats(assetId).then(setRecentChats);
+    getAgentCategories().then(setAgentCategories);
+    getFrequentQueries(assetId).then(setFrequentQueries);
+  }, [assetId]);
+
+  const addMessage = useCallback((msg: AgentChatMessage) => {
+    setMessages((prev) => [...prev, msg]);
     setActiveChatId((prev) => prev ?? 'new');
   }, []);
 
-  const simulateAgent = useCallback(
-    (agentId: string) => {
-      const agent = getAgentById(agentId);
-      if (!agent) return;
-
-      setExecutionStates((prev) => ({ ...prev, [agentId]: 'running' }));
-
-      setTimeout(() => {
-        setExecutionStates((prev) => ({ ...prev, [agentId]: 'done' }));
-        addMessage({
-          role: 'ai',
-          content:
-            mockAgentResponseContent[agentId] ??
-            `## ${agent.name}\n\nAnalysis complete. Connect the EvGen API to retrieve live insights for this agent.`,
-        });
-      }, 1500);
-    },
-    [addMessage]
-  );
-
   // ── Handlers ─────────────────────────────────────────────────────────────
 
-  const handleAddProject = (name: string) => {
-    const id = `proj-${String(nextProjectId++).padStart(3, '0')}`;
-    setProjects((prev) => [...prev, { id, name, chats: [] }]);
-    setActiveProjectId(id);
+  const handleAddProject = async (name: string) => {
+    const project = await createProject(assetId, name);
+    setProjects((prev) => [...prev, project]);
+    setActiveProjectId(project.id);
   };
 
   const handleProjectSelect = (projectId: string) => {
@@ -98,44 +79,46 @@ function ChatAgents() {
     setSelectedAgentIds(new Set());
   };
 
-  const handleChatSelect = (chatId: string) => {
+  const handleChatSelect = async (chatId: string) => {
     setActiveChatId(chatId);
-    setMessages(mockChatMessages);
+    const msgs = await getChatMessages(chatId);
+    setMessages(msgs);
     const owningProject = projects.find((p) => p.chats.some((c) => c.id === chatId));
     if (owningProject) setActiveProjectId(owningProject.id);
   };
 
-  const handleSendMessage = (text: string, mode: ChatMode) => {
-    // On the first message of a new chat, register it under the active project
-    if (activeChatId === null && activeProjectId) {
-      const newChatId = `chat-${Date.now()}`;
-      setActiveChatId(newChatId);
-      const chatTitle = text.length > 50 ? `${text.slice(0, 50)}…` : text;
+  const handleSendMessage = async (text: string, mode: ChatMode) => {
+    let currentChatId = activeChatId;
+
+    if (currentChatId === null && activeProjectId) {
+      const title = text.length > 50 ? `${text.slice(0, 50)}…` : text;
+      const newChat = await createChat(activeProjectId, title);
+      currentChatId = newChat.id;
+      setActiveChatId(currentChatId);
       setProjects((prev) =>
         prev.map((p) =>
-          p.id === activeProjectId
-            ? { ...p, chats: [...p.chats, { id: newChatId, title: chatTitle, projectId: activeProjectId }] }
-            : p,
+          p.id === activeProjectId ? { ...p, chats: [...p.chats, newChat] } : p,
         ),
       );
     }
 
+    // Add user message optimistically
     addMessage({
+      id: `amsg-${Date.now()}`,
       role: 'user',
       content: text,
-      userInitials: 'AS',
+      userInitials: USER_INITIALS,
+      timestamp: new Date().toISOString(),
     });
-    setTimeout(() => {
-      addMessage({
-        role: 'ai',
-        content: `## Response\n\nI'm reviewing the available evidence for your query.\n\n- **Context:** Pumitamig 1L NSCLC competitive landscape\n- **Mode:** ${mode === 'concise' ? 'Concise summary' : 'Detailed analysis'}\n\nConnect the EvGen API to retrieve live clinical insights.`,
-      });
-    }, 800);
+
+    const aiMessage = await sendChatMessage(currentChatId ?? 'new', text, mode);
+    addMessage(aiMessage);
   };
 
-  const handleAddToNotes = (message: AgentChatMessage) => {
+  const handleAddToNotes = async (message: AgentChatMessage) => {
+    await addMessageToNotesService(message.id);
     setMessages((prev) =>
-      prev.map((m) => (m.id === message.id ? { ...m, addedToNotes: true } : m))
+      prev.map((m) => (m.id === message.id ? { ...m, addedToNotes: true } : m)),
     );
   };
 
@@ -147,25 +130,30 @@ function ChatAgents() {
     });
   };
 
-  const handleRunAgent = (agentId: string) => {
-    simulateAgent(agentId);
-  };
+  const handleRunAgent = useCallback(async (agentId: string) => {
+    setExecutionStates((prev) => ({ ...prev, [agentId]: 'running' }));
+    try {
+      const response = await runAgentService(agentId, activeChatId ?? 'new');
+      setExecutionStates((prev) => ({ ...prev, [agentId]: 'done' }));
+      addMessage(response);
+    } catch {
+      setExecutionStates((prev) => ({ ...prev, [agentId]: 'idle' }));
+    }
+  }, [addMessage, activeChatId]);
 
-  const handleRunAll = (categoryId: string) => {
-    const category = mockAgentCategories.find((c) => c.id === categoryId);
-    if (!category) return;
-    category.agents.forEach((agent, i) => {
-      setTimeout(() => simulateAgent(agent.id), i * 400);
-    });
-  };
 
   const handleRunSelected = () => {
     Array.from(selectedAgentIds).forEach((agentId, i) => {
-      setTimeout(() => simulateAgent(agentId), i * 400);
+      setTimeout(() => handleRunAgent(agentId), i * 400);
     });
   };
 
   const handleClearSelected = () => setSelectedAgentIds(new Set());
+
+  const handleRunComplete = useCallback(() => {
+    setSelectedAgentIds(new Set());
+    setExecutionStates({});
+  }, []);
 
   const handleBack = () => navigate(ROUTES.HOME);
 
@@ -175,13 +163,15 @@ function ChatAgents() {
         <AssetSubNav
           assetName={asset?.name ?? ''}
           activeTab="Chat & Agents"
+          indicationName={asset?.indications.find(i => i.id === indicationId)?.name}
+          lastUpdated={asset?.lastUpdated}
           onBack={handleBack}
         />
 
         <div className="flex flex-1 overflow-hidden">
           <ChatAgentsSidebar
             projects={projects}
-            recentChats={mockRecentChats}
+            recentChats={recentChats}
             activeChatId={activeChatId}
             activeProjectId={activeProjectId}
             onChatSelect={handleChatSelect}
@@ -191,22 +181,21 @@ function ChatAgents() {
           />
 
           <ChatWindow
-            userName={MOCK_USER_NAME}
             messages={messages}
-            frequentQueries={mockFrequentQueries}
+            frequentQueries={frequentQueries}
             onSendMessage={handleSendMessage}
             onAddToNotes={handleAddToNotes}
+            onClearChat={handleNewChat}
           />
 
           <AgentMarketplace
-            categories={mockAgentCategories}
+            categories={agentCategories}
             selectedAgentIds={selectedAgentIds}
             executionStates={executionStates}
             onCheckAgent={handleCheckAgent}
-            onRunAgent={handleRunAgent}
-            onRunAll={handleRunAll}
             onRunSelected={handleRunSelected}
             onClearSelected={handleClearSelected}
+            onRunComplete={handleRunComplete}
           />
         </div>
       </div>

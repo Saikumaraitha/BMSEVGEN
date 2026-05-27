@@ -26,7 +26,7 @@ function CreateDocumentModal({ open, onClose, onCreate, isCreating = false }: Cr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-2xl shadow-xl w-[440px] max-w-[95vw] px-10 py-8 relative">
+      <div className="bg-white rounded-2xl shadow-xl w-[597px] h-[395px] max-w-[95vw] px-10 py-6 relative">
         <button
           type="button"
           onClick={handleClose}
@@ -41,33 +41,36 @@ function CreateDocumentModal({ open, onClose, onCreate, isCreating = false }: Cr
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-neutral-700">
-              <span className="text-red-500 mr-0.5">*</span>Document Name
+              Document Name
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-              className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              className="w-full px-3 py-2.5 bg-neutral-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-neutral-700">Description</label>
+            <label className="text-sm font-medium text-neutral-700">
+              Description <em className="font-normal">(optional)</em>
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
+              rows={3}
+              className="w-full px-3 py-2.5 bg-neutral-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
             />
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3 mt-8">
+        <div className="flex items-center justify-center gap-3 mt-6">
           <button
             type="button"
             onClick={handleClose}
-            className="px-6 py-2 rounded-full border border-brand-primary text-brand-primary text-sm font-medium hover:bg-primary-tint-04 transition-colors"
+            className="px-6 py-2 rounded-[5px] border border-[#D70000] text-[#D70000] text-sm font-medium transition-colors"
+            style={{ fontFamily: 'Roboto' }}
           >
             Cancel
           </button>
@@ -75,7 +78,8 @@ function CreateDocumentModal({ open, onClose, onCreate, isCreating = false }: Cr
             type="button"
             onClick={handleCreate}
             disabled={!name.trim() || isCreating}
-            className="px-7 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-7 py-2 rounded-[5px] text-[#FFF] text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ fontFamily: 'Roboto', background: 'linear-gradient(180deg, #E43BE0 0%, #B500B1 100%)' }}
           >
             {isCreating ? 'Creating…' : 'Create'}
           </button>

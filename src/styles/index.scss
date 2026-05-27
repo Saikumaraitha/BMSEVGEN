@@ -15,6 +15,23 @@
 }
 
 @layer utilities {
+  .agent-header-bg {
+    background: var(--color-agent-header-bg);
+  }
+
+  .success-check-icon {
+    background: var(--gradient-success-check);
+  }
+
+  .asset-create-btn {
+    background: var(--gradient-btn-create);
+  }
+
+  .input-gradient-border {
+    border: 1.35px solid var(--color-primary);
+    box-shadow: 0 0 15px 0px var(--color-primary-tint-17);
+  }
+
   .scrollbar-hide {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -40,6 +57,29 @@
     &::-webkit-scrollbar-thumb:hover {
       background: var(--color-neutral-500);
     }
+  }
+
+}
+
+/* Always-visible scrollbar — outside @layer so it beats the global * hide rules */
+.scrollbar-panel {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--color-neutral-300) var(--color-neutral-100) !important;
+
+  &::-webkit-scrollbar {
+    display: block !important;
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-neutral-100);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-300);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-400);
   }
 }
 

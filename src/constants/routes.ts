@@ -4,6 +4,9 @@ export const ROUTE_SEGMENTS = {
   HOME:       '/',
   ASSET_ROOT: '/asset/:assetId',
 
+  // Indication nesting
+  INDICATION: 'indication/:indicationId',
+
   // Header tabs
   CHAT_AGENTS:     'chat-agents',
   RESEARCH_DOCUMENTS: 'research-documents',
@@ -18,8 +21,9 @@ export const ROUTE_SEGMENTS = {
 const S = ROUTE_SEGMENTS
 
 const assetRoot               = S.ASSET_ROOT
-const researchDocBase         = `${assetRoot}/${S.RESEARCH_DOCUMENTS}`
-const gapBase                 = `${assetRoot}/${S.GAP_IDENTIFICATION}`
+const indicationBase          = `${assetRoot}/${S.INDICATION}`
+const researchDocBase         = `${indicationBase}/${S.RESEARCH_DOCUMENTS}`
+const gapBase                 = `${indicationBase}/${S.GAP_IDENTIFICATION}`
 
 // ─── Absolute paths (used in <Link to={...}> and navigate()) ─────────────────
 
@@ -27,25 +31,26 @@ export const ROUTES = {
   HOME: S.HOME,
 
   ASSET: {
-    CHAT_AGENTS: `${assetRoot}/${S.CHAT_AGENTS}`,
+    CHAT_AGENTS: `${indicationBase}/${S.CHAT_AGENTS}`,
 
     RESEARCH_DOCUMENTS: {
       ROOT: researchDocBase,
       DOC:  `${researchDocBase}/${S.DOC_ID}`,
     },
     GAP_IDENTIFICATION: {
-      ROOT:      gapBase,
+      ROOT: gapBase,
     }
   },
 } as const
 
-// ─── Helper to resolve :assetId / :docId ─────────────────────────────────────
+// ─── Helper to resolve :assetId / :indicationId / :docId ─────────────────────
 
 export function buildPath(
   route: string,
-  params: { assetId: string; docId?: string },
+  params: { assetId: string; indicationId: string; docId?: string },
 ): string {
   let path = route.replace(':assetId', params.assetId)
+  path = path.replace(':indicationId', params.indicationId)
   if (params.docId) path = path.replace(':docId', params.docId)
   return path
 }

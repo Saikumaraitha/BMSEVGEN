@@ -29,7 +29,7 @@ function ResearchWorkspaceSidebar({
           <i className="bi bi-list text-base text-brand-primary flex-shrink-0" aria-hidden="true" />
         )}
         {!collapsed && (
-          <span className="flex-1 text-xs font-bold text-brand-primary uppercase tracking-wide leading-snug">
+          <span className="flex-1 text-xs font-bold text-brand-primary uppercase whitespace-nowrap leading-snug">
             Research Workspace
           </span>
         )}

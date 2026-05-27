@@ -1,5 +1,5 @@
 import bmsLogoIcon from "../../assets/icons/bms.svg";
-import SparkleAiIcon from '../../assets/icons/sparkle-ai.svg?react'
+import AiIcon from '../../assets/icons/ai.svg?react';
 
 function TopBar() {
 
@@ -16,15 +16,11 @@ function TopBar() {
             <span className="text-neutral-900">Studio</span>
           </span>
         </div>
-
-        {/* EvGen AI button */}
-        <button
-          type="button"
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary text-white text-sm font-medium hover:bg-brand-primary-dark transition-colors"
-        >
-          <SparkleAiIcon className="w-4 h-4" aria-hidden="true" />
-          EvGen AI
-        </button>
+        {/* AI badge */}
+        <div className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-topbar-ai-badge text-xs text-topbar-text font-semibold font-heading whitespace-nowrap">
+          <AiIcon className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
+          <span>AI Generated Content- verify before use</span>
+        </div>
       </div>
     </header>
   );

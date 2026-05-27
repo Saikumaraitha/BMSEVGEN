@@ -11,6 +11,7 @@ const DOCUMENTS: NoteDocument[] = [
   { id: 'doc-003', title: 'Pumitamig | NSCLC - Research Doc', editor: 'Maya Kim',  lastEdited: 'Jan 21, 2026' },
 ];
 
+
 interface AddToNotesModalProps {
   onSelect: (documentId: string | 'new') => void;
   onClose: () => void;

@@ -1,76 +1,46 @@
-import type { AgentExecutionState, AgentCategory } from '../../types/chat-agents';
+import type { AgentCategory } from '../../types/chat-agents';
+import DiseaseIcon from '../../assets/icons/DiseaseTreatement.svg?react';
+import CompetitiveIcon from '../../assets/icons/CompetitiveBenchmark.svg?react';
+import AssetStrategyIcon from '../../assets/icons/AssetStrategy.svg?react';
+
+const CATEGORY_ICON_MAP: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  'disease-treatment': DiseaseIcon,
+  'competitive-benchmark': CompetitiveIcon,
+  'asset-strategy': AssetStrategyIcon,
+};
 
 interface AgentRowProps {
   agent: { id: string; name: string; description: string; icon: string };
   checked: boolean;
-  executionState: AgentExecutionState;
   onCheck: (agentId: string) => void;
-  onRun: (agentId: string) => void;
 }
 
-function AgentRow({ agent, checked, executionState, onCheck, onRun }: AgentRowProps) {
-  const isRunning = executionState === 'running';
-  const isDone = executionState === 'done';
-
+function AgentRow({ agent, checked, onCheck }: AgentRowProps) {
   return (
-    <div
-      className={[
-        'flex items-start gap-2.5 px-3 py-2.5 transition-colors',
-        checked ? 'bg-brand-primary/5' : 'hover:bg-neutral-50',
-      ].join(' ')}
-    >
-      {/* Checkbox */}
+    <div className="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition-colors">
       <button
         type="button"
         onClick={() => onCheck(agent.id)}
         className={[
-          'flex-shrink-0 mt-0.5 w-4 h-4 rounded border-2 flex items-center justify-center transition-colors',
+          'flex-shrink-0 mt-0.5 w-[18px] h-[18px] rounded border-2 flex items-center justify-center transition-colors',
           checked
             ? 'bg-brand-primary border-brand-primary'
-            : 'border-neutral-300 bg-white hover:border-brand-primary',
+            : 'border-agent-checkbox-border bg-white hover:border-brand-primary',
         ].join(' ')}
         aria-checked={checked}
         role="checkbox"
         aria-label={`Select ${agent.name}`}
       >
-        {checked && <i className="bi bi-check text-white text-[9px] leading-none" aria-hidden="true" />}
+        {checked && <i className="bi bi-check text-white text-xs leading-none" aria-hidden="true" />}
       </button>
 
-      {/* Agent icon */}
-      <div className="flex-shrink-0 w-6 h-6 rounded-md bg-neutral-100 flex items-center justify-center mt-0.5">
-        <i className={`bi ${agent.icon} text-xs text-neutral-500`} aria-hidden="true" />
-      </div>
-
-      {/* Name + description */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-neutral-800 leading-tight">{agent.name}</p>
-        <p className="text-[11px] text-neutral-400 leading-snug mt-0.5 line-clamp-2">
+        <p className={['text-xs font-semibold leading-tight', checked ? 'text-agent-checked-title' : 'text-agent-category'].join(' ')}>
+          {agent.name}
+        </p>
+        <p className={['text-10 leading-snug mt-0.5 line-clamp-2', checked ? 'text-brand-primary-dark' : 'text-neutral-400'].join(' ')}>
           {agent.description}
         </p>
-      </div>
-
-      {/* Execution state */}
-      <div className="flex-shrink-0 flex items-center mt-0.5">
-        {isDone ? (
-          <i className="bi bi-check-circle text-emerald-500 text-base flex-shrink-0" title="Complete" aria-hidden="true" />
-        ) : isRunning ? (
-          <span
-            className="w-7 h-7 rounded-full bg-brand-primary/10 flex items-center justify-center"
-            title="Running…"
-          >
-            <i className="bi bi-arrow-repeat text-brand-primary text-sm animate-spin" aria-hidden="true" />
-          </span>
-        ) : (
-          <button
-            type="button"
-            onClick={() => onRun(agent.id)}
-            className="w-7 h-7 rounded-full bg-brand-primary flex items-center justify-center hover:bg-brand-primary-dark transition-colors"
-            title={`Run ${agent.name}`}
-            aria-label={`Run ${agent.name}`}
-          >
-            <i className="bi bi-play-fill text-[11px] text-white" aria-hidden="true" />
-          </button>
-        )}
       </div>
     </div>
   );
@@ -83,10 +53,7 @@ interface AgentCardProps {
   expanded: boolean;
   onToggleExpand: (categoryId: string) => void;
   selectedAgentIds: Set<string>;
-  executionStates: Record<string, AgentExecutionState>;
   onCheckAgent: (agentId: string) => void;
-  onRunAgent: (agentId: string) => void;
-  onRunAll: (categoryId: string) => void;
 }
 
 function AgentCard({
@@ -94,97 +61,106 @@ function AgentCard({
   expanded,
   onToggleExpand,
   selectedAgentIds,
-  executionStates,
   onCheckAgent,
-  onRunAgent,
-  onRunAll,
 }: AgentCardProps) {
   const checkedCount = category.agents.filter((a) => selectedAgentIds.has(a.id)).length;
-  const doneCount = category.agents.filter((a) => executionStates[a.id] === 'done').length;
-  const allDone = doneCount === category.agents.length;
-  const anyRunning = category.agents.some((a) => executionStates[a.id] === 'running');
-  const hasProgress = doneCount > 0 || anyRunning;
+  const allCategoryChecked = checkedCount === category.agents.length && category.agents.length > 0;
+  const anyCategoryChecked = checkedCount > 0;
+
+  const CategoryIcon = CATEGORY_ICON_MAP[category.icon];
+
+  const handleCategoryCheck = () => {
+    if (allCategoryChecked) {
+      category.agents.forEach((a) => { if (selectedAgentIds.has(a.id)) onCheckAgent(a.id); });
+    } else {
+      category.agents.forEach((a) => { if (!selectedAgentIds.has(a.id)) onCheckAgent(a.id); });
+    }
+  };
 
   return (
-    <div className="flex-shrink-0 border border-neutral-200 rounded-xl overflow-hidden bg-white">
+    <div className={[
+      'flex-shrink-0 rounded-xl overflow-hidden bg-white border transition-colors',
+      expanded ? 'border-brand-primary-dark' : anyCategoryChecked ? 'border-brand-primary' : 'border-agent-card-border',
+    ].join(' ')}>
+
       {/* Category header row */}
-      <button
-        type="button"
-        onClick={() => onToggleExpand(category.id)}
-        className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-neutral-50 transition-colors"
-      >
-        <div className="w-8 h-8 rounded-lg bg-primary-tint-10 flex items-center justify-center flex-shrink-0">
-          <i className={`bi ${category.icon} text-sm text-brand-primary`} aria-hidden="true" />
-        </div>
+      <div className={[
+        'flex items-center gap-3 px-4 py-3.5 transition-colors',
+        expanded ? 'bg-agent-card-expanded-bg' : 'bg-white',
+      ].join(' ')}>
 
-        <div className="flex-1 min-w-0 text-left">
-          <p className="text-sm font-semibold text-neutral-900 leading-tight truncate">
-            {category.name}
-          </p>
-            <p className="text-[11px] leading-tight mt-0.5">
-            {hasProgress ? (
-              <span className={allDone ? 'text-emerald-600 font-medium' : 'text-brand-primary font-medium'}>
-                {doneCount}/{category.agents.length} complete
-              </span>
-            ) : (
-              <span className="text-neutral-400">
-                {category.agents.length} agents
-                {checkedCount > 0 && ` · ${checkedCount} selected`}
-              </span>
-            )}
-          </p>
-        </div>
+        {/* Category-level checkbox */}
+        <button
+          type="button"
+          onClick={handleCategoryCheck}
+          className={[
+            'flex-shrink-0 w-[18px] h-[18px] rounded border-2 flex items-center justify-center transition-colors',
+            allCategoryChecked || anyCategoryChecked
+              ? 'bg-brand-primary border-brand-primary'
+              : 'border-agent-checkbox-border bg-white hover:border-brand-primary',
+          ].join(' ')}
+          aria-label={`Select all agents in ${category.name}`}
+        >
+          {allCategoryChecked && (
+            <i className="bi bi-check text-white text-[9px] leading-none" aria-hidden="true" />
+          )}
+          {anyCategoryChecked && !allCategoryChecked && (
+            <span className="w-2 h-[2px] bg-white rounded-full" />
+          )}
+        </button>
 
-        {allDone ? (
-          <i className="bi bi-check-circle text-emerald-500 text-base flex-shrink-0" aria-hidden="true" />
-        ) : (
+        {/* Expand toggle — icon + name + count + chevron */}
+        <button
+          type="button"
+          onClick={() => onToggleExpand(category.id)}
+          className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition-opacity"
+        >
+          <div className={[
+            'w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0',
+            expanded ? 'bg-white' : 'bg-primary-tint-10',
+          ].join(' ')}>
+            {CategoryIcon
+              ? <CategoryIcon className="w-4 h-4" />
+              : <i className={`bi ${category.icon} text-sm text-brand-primary`} aria-hidden="true" />
+            }
+          </div>
+
+          <div className="flex-1 min-w-0 text-left">
+            <p className="text-xs font-semibold text-agent-category leading-tight truncate">
+              {category.name}
+            </p>
+            <p className="text-10 mt-0.5 leading-tight">
+              <span className="text-agent-category font-normal">{category.agents.length} agents</span>
+              {checkedCount > 0 && (
+                <>
+                  <span className="text-agent-category"> · </span>
+                  <span className="text-brand-primary font-semibold">{checkedCount} selected</span>
+                </>
+              )}
+            </p>
+          </div>
+
           <i
             className={[
-              'bi text-xs text-neutral-400 flex-shrink-0 transition-transform duration-200',
-              expanded ? 'bi-chevron-up' : 'bi-chevron-right',
+              'bi text-xs text-brand-primary flex-shrink-0 transition-transform duration-200',
+              expanded ? 'bi-chevron-up' : 'bi-chevron-down',
             ].join(' ')}
             aria-hidden="true"
           />
-        )}
-      </button>
+        </button>
+      </div>
 
-      {/* Expanded: Run All at top, then agent rows */}
+      {/* Expanded: agent rows only (no Run All button) */}
       {expanded && (
-        <div className="border-t border-neutral-100">
-          {/* Run All Agents — top of expanded content */}
-          <div className="px-3 py-2 border-b border-neutral-100">
-            <button
-              type="button"
-              onClick={() => onRunAll(category.id)}
-              className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-colors bg-brand-primary text-white hover:bg-brand-primary-dark"
-            >
-              {anyRunning ? (
-                <>
-                  <i className="bi bi-arrow-repeat text-sm animate-spin" aria-hidden="true" />
-                  Running…
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-play-fill text-sm" aria-hidden="true" />
-                  Run All Agents
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Agent rows */}
-          <div className="flex flex-col divide-y divide-neutral-50">
-            {category.agents.map((agent) => (
-              <AgentRow
-                key={agent.id}
-                agent={agent}
-                checked={selectedAgentIds.has(agent.id)}
-                executionState={executionStates[agent.id] ?? 'idle'}
-                onCheck={onCheckAgent}
-                onRun={onRunAgent}
-              />
-            ))}
-          </div>
+        <div className="border-t border-neutral-100 flex flex-col divide-y divide-neutral-50">
+          {category.agents.map((agent) => (
+            <AgentRow
+              key={agent.id}
+              agent={agent}
+              checked={selectedAgentIds.has(agent.id)}
+              onCheck={onCheckAgent}
+            />
+          ))}
         </div>
       )}
     </div>

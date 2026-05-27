@@ -35,7 +35,7 @@ export const mockAgentCategories: AgentCategory[] = [
   {
     id: 'agent-cat-001',
     name: 'Disease & Treatment Landscape',
-    icon: 'bi-activity',
+    icon: 'disease-treatment',
     agents: [
       {
         id: 'agent-001',
@@ -66,7 +66,7 @@ export const mockAgentCategories: AgentCategory[] = [
   {
     id: 'agent-cat-002',
     name: 'Competitive Benchmark',
-    icon: 'bi-bar-chart-line',
+    icon: 'competitive-benchmark',
     agents: [
       {
         id: 'agent-005',
@@ -91,7 +91,7 @@ export const mockAgentCategories: AgentCategory[] = [
   {
     id: 'agent-cat-003',
     name: 'Asset Strategy & Evidence',
-    icon: 'bi-bullseye',
+    icon: 'asset-strategy',
     agents: [
       {
         id: 'agent-008',

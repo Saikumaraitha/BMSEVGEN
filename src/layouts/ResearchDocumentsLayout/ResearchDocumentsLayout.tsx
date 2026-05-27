@@ -25,15 +25,16 @@ import { ResearchDocumentsProvider, useResearchDocumentsContext } from '../../co
 
 interface ResearchDocumentsLayoutProps {
   assetName?: string;
+  indicationName?: string;
   lastUpdated?: string;
   onBack?: () => void;
   children: ReactNode;
 }
 
-function LayoutContent({ assetName = 'Asset', lastUpdated, onBack, children }: ResearchDocumentsLayoutProps) {
+function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBack, children }: ResearchDocumentsLayoutProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { assetId = '' } = useParams<{ assetId: string }>();
+  const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -76,7 +77,7 @@ function LayoutContent({ assetName = 'Asset', lastUpdated, onBack, children }: R
     handleAddNoteAction,
     handleShareAction,
     handleDeleteAction,
-  } = createLayoutHandlers({ setSidebarCollapsed, setSearchParams, navigate, assetId });
+  } = createLayoutHandlers({ setSidebarCollapsed, setSearchParams, navigate, assetId, indicationId });
 
   const handleBackToList = () => guardedNavigate(rawBackToList);
   const handleGenerateGaps = () => guardedNavigate(rawGenerateGaps);
@@ -96,6 +97,7 @@ function LayoutContent({ assetName = 'Asset', lastUpdated, onBack, children }: R
       <AssetSubNav
         assetName={assetName}
         activeTab={RD_PAGE_TITLE}
+        indicationName={indicationName}
         lastUpdated={lastUpdated}
         onBack={onBack}
       />
@@ -116,10 +118,10 @@ function LayoutContent({ assetName = 'Asset', lastUpdated, onBack, children }: R
                     type="button"
                     onClick={() => handleFilterClick(item.key)}
                     className={[
-                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 text-sm font-heading transition-colors border-l-[3px]',
+                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 h-[35px] transition-colors border-l-[3px] font-[Inter] text-[12px] leading-normal',
                       isActive
-                        ? 'border-brand-primary bg-brand-primary/10 text-brand-primary font-semibold'
-                        : 'border-transparent text-neutral-500 font-normal hover:bg-neutral-50',
+                        ? 'border-brand-primary bg-[var(--color-primary)] text-[#FFF] font-bold'
+                        : 'border-transparent text-[#3A3A3A] font-normal hover:bg-neutral-50',
                     ].join(' ')}
                   >
                     <i className={`bi ${item.icon} text-base flex-shrink-0`} aria-hidden="true" />
@@ -147,10 +149,10 @@ function LayoutContent({ assetName = 'Asset', lastUpdated, onBack, children }: R
                     type="button"
                     onClick={() => handleFilterClick(item.key)}
                     className={[
-                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 text-sm font-heading transition-colors border-l-[3px]',
+                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 h-[35px] transition-colors border-l-[3px] font-[Inter] text-[12px] leading-normal',
                       isActive
-                        ? 'border-brand-primary bg-brand-primary/10 text-brand-primary font-semibold'
-                        : 'border-transparent text-neutral-500 font-normal hover:bg-neutral-50',
+                        ? 'border-brand-primary bg-[var(--color-primary)] text-[#FFF] font-bold'
+                        : 'border-transparent text-[#3A3A3A] font-normal hover:bg-neutral-50',
                     ].join(' ')}
                   >
                     <i className={`bi ${item.icon} text-base flex-shrink-0`} aria-hidden="true" />

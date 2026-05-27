@@ -7,7 +7,7 @@ import { getAssetDetails } from '../../services/home';
 import type { Asset } from '../../types/home';
 
 function ResearchDocuments() {
-  const { assetId = '' } = useParams<{ assetId: string }>();
+  const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>();
   const [asset, setAsset] = useState<Asset>();
   const navigate = useNavigate();
 
@@ -21,6 +21,7 @@ function ResearchDocuments() {
     <AppLayout>
       <ResearchDocumentsLayout
         assetName={asset?.name}
+        indicationName={asset?.indications.find(i => i.id === indicationId)?.name}
         lastUpdated={asset?.lastUpdated}
         onBack={handleBack}
       >

@@ -103,7 +103,7 @@ function IndicationRow({ indication, onViewDetails }: IndicationRowProps) {
 
 interface AssetGroupListProps {
   assets:        Asset[]
-  onViewDetails: (assetId: string) => void
+  onViewDetails: (assetId: string, indicationId: string) => void
 }
 
 function AssetGroupList({ assets, onViewDetails }: AssetGroupListProps) {
@@ -123,14 +123,14 @@ function AssetGroupList({ assets, onViewDetails }: AssetGroupListProps) {
       {visible.map((asset) => (
         <div
           key={asset.id}
-          className="rounded-2xl border-2 border-brand-primary/40 overflow-hidden shadow-[0_4px_15px_0_rgba(140,31,138,0.05)] bg-white"
+          className="rounded-[10px] border-2 border-primary-tint-25 overflow-hidden shadow-[0_4px_15px_0_rgba(140,31,138,0.05)] bg-white"
         >
           {/* Group header */}
           <div className="flex items-center gap-3 px-6 py-3 bg-[rgba(190,43,187,0.10)]">
             <span className="font-heading font-bold text-brand-primary text-base">
               {asset.name}
             </span>
-            <span className="text-asset-tag-mechanism select-none">|</span>
+            <span className="text-asset-tag-mechanism text-xs select-none">|</span>
             <span className="text-xs text-asset-tag-mechanism">{asset.mechanismOfAction}</span>
           </div>
 
@@ -139,7 +139,7 @@ function AssetGroupList({ assets, onViewDetails }: AssetGroupListProps) {
             <IndicationRow
               key={indication.id}
               indication={indication}
-              onViewDetails={() => onViewDetails(asset.id)}
+              onViewDetails={() => onViewDetails(asset.id, indication.id)}
             />
           ))}
         </div>

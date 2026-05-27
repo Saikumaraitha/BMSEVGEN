@@ -16,6 +16,7 @@ interface DocumentsListHandlerDeps {
   setIsCreating: Dispatch<SetStateAction<boolean>>;
   navigate: NavigateFunction;
   assetId: string;
+  indicationId: string;
 }
 
 export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
@@ -30,6 +31,7 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
     setIsCreating,
     navigate,
     assetId,
+    indicationId,
   } = deps;
 
   const handleFilterChange = (key: RdFilterKey) => setSearchParams({ filter: key });
@@ -52,7 +54,7 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
   };
 
   const handleCardClick = (docId: string) =>
-    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId }).replace(':docId', docId));
+    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId }));
 
   const handleCreateNew = () => setShowCreateModal(true);
 
@@ -62,7 +64,7 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
       const { id } = await createResearchDocument(assetId, name, description);
       setShowCreateModal(false);
       navigate(
-        buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId }).replace(':docId', id),
+        buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId: id }),
         { state: { title: name, description } },
       );
     } finally {
@@ -72,7 +74,7 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
 
   const handleGenerateGaps = (docId: string) =>
     navigate(
-      buildPath(ROUTES.ASSET.GAP_IDENTIFICATION.ROOT, { assetId }) + `?docId=${docId}`,
+      buildPath(ROUTES.ASSET.GAP_IDENTIFICATION.ROOT, { assetId, indicationId }) + `?docId=${docId}`,
     );
 
   return {
