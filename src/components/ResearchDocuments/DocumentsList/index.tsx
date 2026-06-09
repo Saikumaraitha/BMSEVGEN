@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import type { AccessType, RawResearchDocument, ResearchDocument } from '../../../types/research-documents';
 import type { RdFilterKey, RdSortKey } from '../../../config/ResearchDocumentsConfig';
 
 const ACCESS_TYPE_MAP: Record<string, AccessType> = {
-  CAN_EDIT:  'Can Edit',
-  VIEW_ONLY: 'View Only',
-  OWNER:     'My Doc',
+  OWNER:  'My Doc',
+  EDITOR: 'Can Edit',
+  VIEWER: 'View Only',
 };
 
 function deriveInitials(name: string): string {
@@ -29,6 +29,7 @@ function transformDocument(raw: RawResearchDocument): ResearchDocument {
     lastEditedBy: raw.last_edited_by.name,
     noteCount:    0,
     commentCount: 0,
+    shared_with:  raw.shared_with ?? [],
   };
 }
 import { getResearchDocuments } from '../../../services/research-documents';
@@ -82,8 +83,9 @@ function DocumentsList() {
   const [deleteDoc, setDeleteDoc] = useState<ResearchDocument | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
+  const loadDocuments = useCallback(() => {
     getResearchDocuments(assetId, indicationId).then((rawDocs) => {
       const docs = rawDocs.map(transformDocument);
       setDocuments(docs);
@@ -94,7 +96,11 @@ function DocumentsList() {
         'view-only': docs.filter((d) => d.accessType === 'View Only').length,
       });
     });
-  }, [assetId, indicationId, setDocCounts]);
+  }, [assetId, indicationId, setDocuments, setDocCounts]);
+
+  useEffect(() => {
+    loadDocuments();
+  }, [loadDocuments]);
 
   const activeFilter = (searchParams.get('filter') ?? 'all') as RdFilterKey;
 
@@ -107,6 +113,7 @@ function DocumentsList() {
     handleDeleteCancel,
     handleDeleteConfirm,
     handleCardClick,
+    handleEditClick,
     handleCreateNew,
     handleCreateDocument,
     handleGenerateGaps,
@@ -119,9 +126,11 @@ function DocumentsList() {
     setDocuments,
     setShowCreateModal,
     setIsCreating,
+    setIsDeleting,
     navigate,
     assetId,
     indicationId,
+    loadDocuments,
   });
 
   const filteredDocuments = filterDocuments(documents, activeFilter, searchTerm, sortBy);
@@ -152,6 +161,7 @@ function DocumentsList() {
                 onShare={handleShareOpen}
                 onDelete={handleDeleteRequest}
                 onOpen={handleCardClick}
+                onEdit={(doc) => handleEditClick(doc.id)}
                 onGenerateGaps={handleGenerateGaps}
               />
             ))}
@@ -163,14 +173,17 @@ function DocumentsList() {
         open={shareOpen !== null}
         docId={shareOpen ?? ''}
         docTitle={documents.find((d) => d.id === shareOpen)?.title ?? ''}
+        iepId={indicationId}
+        sharedWith={documents.find((d) => d.id === shareOpen)?.shared_with ?? []}
         onClose={handleShareClose}
-        onSave={handleShareClose}
+        onSave={() => { handleShareClose(); loadDocuments(); }}
       />
       <DeleteConfirmModal
         open={deleteDoc !== null}
         docTitle={deleteDoc?.title ?? ''}
         onConfirm={() => deleteDoc && handleDeleteConfirm(deleteDoc.id)}
         onCancel={handleDeleteCancel}
+        isDeleting={isDeleting}
       />
       <CreateDocumentModal
         open={showCreateModal}

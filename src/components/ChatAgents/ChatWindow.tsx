@@ -6,6 +6,7 @@ import SendIcon from '../../assets/icons/Send.svg?react';
 
 interface ChatWindowProps {
   messages: AgentChatMessage[];
+  isLoadingMessages?: boolean;
   frequentQueries: FrequentQuery[];
   onSendMessage: (text: string, mode: ChatMode) => void;
   onAddToNotes: (message: AgentChatMessage) => void;
@@ -63,6 +64,7 @@ function SeeAllModal({
 
 function ChatWindow({
   messages,
+  isLoadingMessages = false,
   frequentQueries,
   onSendMessage,
   onAddToNotes,
@@ -109,7 +111,7 @@ function ChatWindow({
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
   };
 
-  const previewQueries = frequentQueries.slice(0, PREVIEW_FAQ_COUNT);
+  const previewQueries = Array.isArray(frequentQueries) ? frequentQueries.slice(0, PREVIEW_FAQ_COUNT) : [];
 
   // ── Mode pills + send button row (shared inside the input box) ──────────────
   const inputFooter = (
@@ -178,11 +180,23 @@ function ChatWindow({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-white relative">
-      {hasMessages ? (
+      {isLoadingMessages ? (
+        /* ── Loading skeleton ── */
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-primary animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-primary animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-primary animate-bounce" />
+            </div>
+            <p className="text-xs text-text-subtle font-sans">Loading messages…</p>
+          </div>
+        </div>
+      ) : hasMessages ? (
         /* ── Conversation view ── */
         <>
           {/* Top bar with Clear Chat */}
-          <div className="flex-shrink-0 flex items-center justify-end px-6 py-3 absolute right-0">
+          <div className="flex-shrink-0 flex items-center justify-end px-6 py-3">
             <button
               type="button"
               onClick={onClearChat}
@@ -199,6 +213,11 @@ function ChatWindow({
                   key={msg.id}
                   message={msg}
                   onAddToNotes={msg.role === 'ai' ? onAddToNotes : undefined}
+                  onFollowUpQuery={
+                    msg.role === 'ai'
+                      ? (text) => onSendMessage(text, mode)
+                      : undefined
+                  }
                 />
               ))}
               <div ref={messagesEndRef} />

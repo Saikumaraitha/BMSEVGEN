@@ -254,30 +254,32 @@ function ChatAgentsSidebar({
             <hr className="my-2 mx-3 border-0 border-t border-rd-divider flex-shrink-0" />
 
             {/* Recent section */}
-            <div className="px-3 pt-1 pb-1.5 flex-shrink-0">
-              <span className="text-[10px] font-bold text-rd-section-label uppercase">
+            <div className="px-3 pt-2 pb-2 flex-shrink-0">
+              <span className="text-[10px] font-bold tracking-widest text-rd-section-label uppercase">
                 Recent
               </span>
             </div>
 
-            {recentChats.map((chat) => {
-              const isActive = activeChatId === chat.id;
-              return (
-                <button
-                  key={chat.id}
-                  type="button"
-                  onClick={() => onChatSelect(chat.id)}
-                  className={[
-                    'w-full text-left px-3 py-1.5 text-xs transition-colors truncate',
-                    isActive
-                      ? 'text-brand-primary font-semibold bg-exec-icon-bg'
-                      : 'text-prompt-card-text font-normal hover:bg-neutral-50',
-                  ].join(' ')}
-                >
-                  {chat.title}
-                </button>
-              );
-            })}
+            <div className="flex flex-col flex-shrink-0">
+              {recentChats.map((chat) => {
+                const isActive = activeChatId === chat.id;
+                return (
+                  <button
+                    key={chat.id}
+                    type="button"
+                    onClick={() => onChatSelect(chat.id)}
+                    className={[
+                      'w-full text-left px-3 py-2.5 text-[13px] leading-snug transition-colors',
+                      isActive
+                        ? 'text-brand-primary font-medium bg-exec-icon-bg'
+                        : 'text-neutral-600 font-normal hover:bg-neutral-50',
+                    ].join(' ')}
+                  >
+                    <span className="block truncate">{chat.title}</span>
+                  </button>
+                );
+              })}
+            </div>
 
             <div className="pb-3 flex-shrink-0" />
           </div>

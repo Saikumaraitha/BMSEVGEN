@@ -1,23 +1,29 @@
-interface NoteDocument {
-  id: string;
-  title: string;
-  editor: string;
-  lastEdited: string;
-}
-
-const DOCUMENTS: NoteDocument[] = [
-  { id: 'doc-001', title: 'Pumitamig | RCC - Research Doc',  editor: 'Ava Sharma', lastEdited: 'Feb 3, 2026' },
-  { id: 'doc-002', title: 'Pumitamig | TNBC - Research Doc', editor: 'Ryan Lee',   lastEdited: 'Jan 21, 2026' },
-  { id: 'doc-003', title: 'Pumitamig | NSCLC - Research Doc', editor: 'Maya Kim',  lastEdited: 'Jan 21, 2026' },
-];
-
+import { useEffect, useState } from 'react';
+import type { RawResearchDocument } from '../../types/research-documents';
+import { getResearchDocuments } from '../../services/research-documents';
+import { formatDocDate } from '../../utils/dateUtils';
 
 interface AddToNotesModalProps {
+  assetId: string;
+  indicationId: string;
   onSelect: (documentId: string | 'new') => void;
   onClose: () => void;
 }
 
-function AddToNotesModal({ onSelect, onClose }: AddToNotesModalProps) {
+function AddToNotesModal({ assetId, indicationId, onSelect, onClose }: AddToNotesModalProps) {
+  const [documents, setDocuments] = useState<RawResearchDocument[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(false);
+    getResearchDocuments(assetId, indicationId)
+      .then(setDocuments)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, [assetId, indicationId]);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
@@ -48,29 +54,42 @@ function AddToNotesModal({ onSelect, onClose }: AddToNotesModalProps) {
             <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider mb-3">
               Existing Documents
             </p>
-            <div className="flex flex-col gap-2">
-              {DOCUMENTS.map((doc) => (
-                <button
-                  key={doc.id}
-                  type="button"
-                  onClick={() => onSelect(doc.id)}
-                  className="flex items-center gap-3 px-4 py-3 border border-neutral-200 rounded-xl hover:border-brand-primary hover:bg-brand-primary/5 transition-all text-left group"
-                >
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center">
-                    <i className="bi bi-file-earmark-text text-neutral-500 text-sm group-hover:text-brand-primary transition-colors" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-neutral-800 truncate group-hover:text-brand-primary transition-colors">
-                      {doc.title}
-                    </p>
-                    <p className="text-xs text-neutral-400">
-                      {doc.editor} &middot; Last edited {doc.lastEdited}
-                    </p>
-                  </div>
-                  <i className="bi bi-chevron-right text-neutral-300 text-xs flex-shrink-0" aria-hidden="true" />
-                </button>
-              ))}
-            </div>
+
+            {loading ? (
+              <div className="flex flex-col gap-2">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-14 rounded-xl bg-neutral-100 animate-pulse" />
+                ))}
+              </div>
+            ) : error ? (
+              <p className="text-xs text-red-500 text-center py-2">Failed to load documents.</p>
+            ) : documents.length === 0 ? (
+              <p className="text-xs text-neutral-400 text-center py-2">No documents found.</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {documents.map((doc) => (
+                  <button
+                    key={doc.doc_id}
+                    type="button"
+                    onClick={() => onSelect(doc.doc_id)}
+                    className="flex items-center gap-3 px-4 py-3 border border-neutral-200 rounded-xl hover:border-brand-primary hover:bg-brand-primary/5 transition-all text-left group"
+                  >
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center">
+                      <i className="bi bi-file-earmark-text text-neutral-500 text-sm group-hover:text-brand-primary transition-colors" aria-hidden="true" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-neutral-800 truncate group-hover:text-brand-primary transition-colors">
+                        {doc.name}
+                      </p>
+                      <p className="text-xs text-neutral-400">
+                        {doc.last_edited_by.name} &middot; Last edited {formatDocDate(doc.last_edited)}
+                      </p>
+                    </div>
+                    <i className="bi bi-chevron-right text-neutral-300 text-xs flex-shrink-0" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Divider */}

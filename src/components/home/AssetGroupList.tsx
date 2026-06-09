@@ -63,7 +63,7 @@ function IndicationRow({ indication, onViewDetails }: IndicationRowProps) {
       className="flex flex-wrap items-center gap-3 px-6 py-5 border-t border-neutral-100 cursor-pointer hover:bg-[rgba(190,43,187,0.025)]"
     >
       {/* Indication name */}
-      <span className="font-sans font-bold text-asset-tag-indication-name text-sm min-w-[3.5rem]">
+      <span className="font-sans font-bold text-asset-tag-indication text-sm min-w-[3.5rem]">
         {indication.name}
       </span>
 
@@ -74,11 +74,11 @@ function IndicationRow({ indication, onViewDetails }: IndicationRowProps) {
         ))}
       </div>
 
-      <div className="flex items-center gap-11">
+      <div className="flex items-center gap-11 text-2xs">
         {/* Last Updated */}
-        <span className="text-xs text-neutral-500 whitespace-nowrap">
+        <span className="text-asset-tag-last-updated whitespace-nowrap">
           Last Updated{" "}
-          <span className="font-semibold text-neutral-700">
+          <span className="text-black">
             {indication.lastUpdated}
           </span>
         </span>
@@ -103,7 +103,7 @@ function IndicationRow({ indication, onViewDetails }: IndicationRowProps) {
 
 interface AssetGroupListProps {
   assets:        Asset[]
-  onViewDetails: (assetId: string, indicationId: string) => void
+  onViewDetails: (assetId: string, indicationId: string, assetName: string, indicationName: string) => void
 }
 
 function AssetGroupList({ assets, onViewDetails }: AssetGroupListProps) {
@@ -139,7 +139,7 @@ function AssetGroupList({ assets, onViewDetails }: AssetGroupListProps) {
             <IndicationRow
               key={indication.id}
               indication={indication}
-              onViewDetails={() => onViewDetails(asset.id, indication.id)}
+              onViewDetails={() => onViewDetails(asset.id, indication.id, asset.name, indication.name)}
             />
           ))}
         </div>

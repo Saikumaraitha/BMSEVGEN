@@ -11,6 +11,7 @@ interface DocumentCardProps {
   onShare: (docId: string) => void;
   onDelete: (doc: ResearchDocument) => void;
   onOpen: (docId: string) => void;
+  onEdit: (doc: ResearchDocument) => void;
   onGenerateGaps: (docId: string) => void;
 }
 
@@ -28,7 +29,7 @@ const ACCESS_TOOLTIP: Record<string, string> = {
 
 function DocumentCard(props: DocumentCardProps) {
   const doc = props.document;
-  const { onShare, onDelete, onOpen, onGenerateGaps } = props;
+  const { onShare, onDelete, onOpen, onEdit, onGenerateGaps } = props;
 
   const isViewOnly = doc.accessType === 'View Only';
   const isMyDoc = doc.accessType === 'My Doc';
@@ -96,6 +97,7 @@ function DocumentCard(props: DocumentCardProps) {
           {!isViewOnly && (
             <button
               type="button"
+              onClick={(e) => { e.stopPropagation(); onEdit(doc); }}
               className="w-7 h-7 flex items-center justify-center rounded-full border border-rd-card-border text-rd-section-label hover:bg-neutral-100 hover:text-brand-primary transition-colors"
               aria-label="Edit"
             >

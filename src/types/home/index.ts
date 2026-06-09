@@ -60,7 +60,7 @@ export interface GetIepsParams {
   pageSize?: number
   status?:   string
   search?:   string
-  sort_byy?: string
+  sort_by?: string
 }
 
 export interface IepPlan {

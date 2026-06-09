@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import AppLayout from '../layouts/AppLayout/AppLayout'
 import AssetLayout from '../layouts/AssetLayout/AssetLayout'
 import { ROUTES } from '../constants/routes'
@@ -13,6 +13,7 @@ interface ComingSoonAssetPageProps {
 function ComingSoonAssetPage({ activeTab }: ComingSoonAssetPageProps) {
   const { assetId = '', indicationId = '' } = useParams<{ assetId: string; indicationId: string }>()
   const navigate = useNavigate()
+  const { state } = useLocation() as { state: { assetName?: string; indicationName?: string } | null }
   const [asset, setAsset] = useState<Asset>()
 
   useEffect(() => {
@@ -22,9 +23,9 @@ function ComingSoonAssetPage({ activeTab }: ComingSoonAssetPageProps) {
   return (
     <AppLayout>
       <AssetLayout
-        assetName={asset?.name}
+        assetName={asset?.name ?? state?.assetName}
         activeTab={activeTab}
-        indicationName={asset?.indications.find(i => i.id === indicationId)?.name}
+        indicationName={asset?.indications?.find(i => i.id === indicationId)?.name ?? state?.indicationName}
         lastUpdated={asset?.lastUpdated}
         onBack={() => navigate(ROUTES.HOME)}
       >

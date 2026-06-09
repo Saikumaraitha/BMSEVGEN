@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppLayout from '../../layouts/AppLayout/AppLayout'
 import HomeToolbar from '../../components/home/HomeToolbar'
@@ -92,29 +92,33 @@ function Home() {
   const [search,       setSearch]       = useState('')
   const [showModal,    setShowModal]    = useState(false)
 
-  useEffect(() => {
-    getAssetsMetadata().then(setMetadata)
-  }, [])
-
-  useEffect(() => {
+  const fetchIeps = useCallback(() => {
     const params: GetIepsParams = {
       page:     1,
       pageSize: 10,
-      sort_byy: SORT_TO_API[sortBy],
+      sort_by: SORT_TO_API[sortBy],
     }
     if (statusFilter !== 'all') params.status = STATUS_UI_TO_API[statusFilter]
     if (search.trim())          params.search = search.trim()
 
     getIeps(params).then(({ data }) => setAssets(mapIepsToAssets(data)))
-  }, [search, statusFilter, sortBy])
+  }, [search, sortBy, statusFilter]);
+
+  useEffect(() => {
+    getAssetsMetadata().then(setMetadata)
+  }, [])
+
+  useEffect(() => {
+    fetchIeps();
+  }, [search, statusFilter, sortBy, fetchIeps]);
 
   const sorted = sortAssets(assets, sortBy)
 
-  const handleViewDetails = (assetId: string, indicationId: string) => {
-    navigate(buildPath(ROUTES.ASSET.CHAT_AGENTS, { assetId, indicationId }))
+  const handleViewDetails = (assetId: string, indicationId: string, assetName: string, indicationName: string) => {
+    navigate(buildPath(ROUTES.ASSET.CHAT_AGENTS, { assetId, indicationId }), { state: { assetName, indicationName } })
   }
 
-  const handleCreatePlan = (data: CreateIepResponseData) => {
+  const handleCreatePlan = (data: CreateIepResponseData, success: true | false) => {
     const indication: Indication = {
       id:          data.disease_area.id,
       name:        data.disease_area.name,
@@ -126,6 +130,9 @@ function Home() {
         a.id === data.asset.id ? { ...a, indications: [...a.indications, indication] } : a,
       ),
     )
+    if (success) {
+      fetchIeps()
+    }
   }
 
   return (

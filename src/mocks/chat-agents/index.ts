@@ -1,4 +1,36 @@
-import type { ChatProject, RecentChat, AgentCategory, AgentChatMessage, FrequentQuery } from '../../types/chat-agents';
+import type { ChatProject, RecentChat, AgentCategory, AgentChatMessage, FrequentQuery, RawNavigationResponse } from '../../types/chat-agents';
+
+export const mockRawNavigation: RawNavigationResponse = {
+  projects: [
+    {
+      project_id: 'proj-001',
+      name: 'Q1 2026 Cobenfy Launch',
+      chat_sessions: [
+        { chat_id: 'chat-001', title: 'Cobenfy GI Safety Profile', is_active: true, last_message_at: '2026-05-11T10:00:00Z' },
+        { chat_id: 'chat-002', title: 'HCP Adoption Barriers', is_active: false, last_message_at: '2026-05-10T10:00:00Z' },
+        { chat_id: 'chat-003', title: 'Titration Strategy Analysis', is_active: false, last_message_at: '2026-05-09T10:00:00Z' },
+      ],
+    },
+    {
+      project_id: 'proj-002',
+      name: 'KOL Prep — Akeso Advisory',
+      chat_sessions: [
+        { chat_id: 'chat-004', title: 'KOL Advisory Board Prep', is_active: false, last_message_at: '2026-05-08T10:00:00Z' },
+        { chat_id: 'chat-005', title: 'BNT327 vs Ivonescimab', is_active: false, last_message_at: '2026-05-07T10:00:00Z' },
+      ],
+    },
+  ],
+  recents: [
+    { chat_id: 'recent-001', title: 'SWOT – Bispecific Landscape', project_id: null, last_message_at: '2026-05-11T10:00:00Z', relative_time: 'Today' },
+    { chat_id: 'recent-002', title: 'Akeso Trial Readout Summary', project_id: null, last_message_at: '2026-05-10T10:00:00Z', relative_time: 'Yesterday' },
+    { chat_id: 'recent-003', title: 'Competitive Gap Analysis', project_id: null, last_message_at: '2026-05-09T10:00:00Z', relative_time: 'May 9' },
+    { chat_id: 'recent-004', title: 'Pumitamig Phase III Design Review', project_id: null, last_message_at: '2026-05-08T10:00:00Z', relative_time: 'May 8' },
+    { chat_id: 'recent-005', title: 'RCC Biomarker Segmentation', project_id: null, last_message_at: '2026-05-07T10:00:00Z', relative_time: 'May 7' },
+    { chat_id: 'recent-006', title: 'TNBC Evidence Gap Summary', project_id: null, last_message_at: '2026-05-06T10:00:00Z', relative_time: 'May 6' },
+    { chat_id: 'recent-007', title: 'Efficacy – Quality of Life Themes', project_id: null, last_message_at: '2026-05-05T10:00:00Z', relative_time: 'May 5' },
+    { chat_id: 'recent-008', title: 'Regulatory Submission Timeline', project_id: null, last_message_at: '2026-05-04T10:00:00Z', relative_time: 'May 4' },
+  ],
+};
 
 export const mockProjects: ChatProject[] = [
   {

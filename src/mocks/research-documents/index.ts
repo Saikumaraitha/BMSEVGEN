@@ -5,8 +5,6 @@ import type {
   ResearchNote,
   ChatMessage,
   DocumentComment,
-  ShareMember,
-  TeamMember,
 } from '../../types/research-documents';
 
 export const mockRawDocuments: RawResearchDocument[] = [
@@ -195,44 +193,6 @@ const doc1Comments: DocumentComment[] = [
   },
 ];
 
-// ─── Team Members (searchable roster for adding to a doc) ────────────────────
-
-export const mockTeamMembers: TeamMember[] = [
-  { id: 'tm-001', name: 'Erica Jones',        email: 'e.jones@bms.com',       initials: 'EJ', avatarColor: 'bg-indigo-500',  jobRole: 'Portfolio Strategy Lead'   },
-  { id: 'tm-002', name: 'Andrew Smith',        email: 'a.smith@bms.com',       initials: 'AS', avatarColor: 'bg-sky-500',     jobRole: 'Medical Strategy Partner'  },
-  { id: 'tm-003', name: 'Walker Texas Ranger', email: 'w.tex.ranger@bms.com',  initials: 'WR', avatarColor: 'bg-emerald-500', jobRole: 'Clinical Evidence Lead'     },
-  { id: 'tm-004', name: 'Alberto Gunil',       email: 'a.gunil@bms.com',       initials: 'AG', avatarColor: 'bg-amber-500',   jobRole: 'Regulatory Affairs Lead'    },
-  { id: 'tm-005', name: 'Ava Sharma',          email: 'ava.sharma@bms.com',    initials: 'AS', avatarColor: 'bg-violet-500',  jobRole: 'Portfolio Strategy Lead'   },
-  { id: 'tm-006', name: 'Ryan Lee',            email: 'r.lee@bms.com',         initials: 'RL', avatarColor: 'bg-teal-500',    jobRole: 'Medical Strategy Partner'  },
-  { id: 'tm-007', name: 'Maya Kim',            email: 'm.kim@bms.com',         initials: 'MK', avatarColor: 'bg-rose-500',    jobRole: 'Clinical Evidence Lead'     },
-  { id: 'tm-008', name: 'Sarah Chen',          email: 's.chen@bms.com',        initials: 'SC', avatarColor: 'bg-pink-500',    jobRole: 'Biomarker Strategy Lead'    },
-  { id: 'tm-009', name: 'Marcus Webb',         email: 'm.webb@bms.com',        initials: 'MW', avatarColor: 'bg-cyan-500',    jobRole: 'Evidence Generation Lead'   },
-  { id: 'tm-010', name: 'Lisa Park',           email: 'l.park@bms.com',        initials: 'LP', avatarColor: 'bg-lime-600',    jobRole: 'Medical Affairs Director'   },
-  { id: 'tm-011', name: 'David Torres',        email: 'd.torres@bms.com',      initials: 'DT', avatarColor: 'bg-orange-500',  jobRole: 'Clinical Development Lead'  },
-  { id: 'tm-012', name: 'Nina Patel',          email: 'n.patel@bms.com',       initials: 'NP', avatarColor: 'bg-fuchsia-500', jobRole: 'Global Medical Director'    },
-];
-
-// ─── People with access per document ─────────────────────────────────────────
-
-export const mockDocShareMembers: Record<string, ShareMember[]> = {
-  'doc-001': [
-    { id: 'tm-001', name: 'Erica Jones',        email: 'e.jones@bms.com',      initials: 'EJ', avatarColor: 'bg-indigo-500',  role: 'Owner'  },
-    { id: 'tm-002', name: 'Andrew Smith',        email: 'a.smith@bms.com',      initials: 'AS', avatarColor: 'bg-sky-500',     role: 'Editor' },
-    { id: 'tm-003', name: 'Walker Texas Ranger', email: 'w.tex.ranger@bms.com', initials: 'WR', avatarColor: 'bg-emerald-500', role: 'Editor' },
-    { id: 'tm-004', name: 'Alberto Gunil',       email: 'a.gunil@bms.com',      initials: 'AG', avatarColor: 'bg-amber-500',   role: 'Viewer' },
-  ],
-  'doc-002': [
-    { id: 'tm-006', name: 'Ryan Lee',   email: 'r.lee@bms.com',      initials: 'RL', avatarColor: 'bg-teal-500',   role: 'Owner'  },
-    { id: 'tm-007', name: 'Maya Kim',   email: 'm.kim@bms.com',      initials: 'MK', avatarColor: 'bg-rose-500',   role: 'Editor' },
-    { id: 'tm-005', name: 'Ava Sharma', email: 'ava.sharma@bms.com', initials: 'AS', avatarColor: 'bg-violet-500', role: 'Viewer' },
-    { id: 'tm-008', name: 'Sarah Chen', email: 's.chen@bms.com',     initials: 'SC', avatarColor: 'bg-pink-500',   role: 'Viewer' },
-  ],
-  'doc-003': [
-    { id: 'tm-007', name: 'Maya Kim',    email: 'm.kim@bms.com',    initials: 'MK', avatarColor: 'bg-rose-500',  role: 'Owner'  },
-    { id: 'tm-006', name: 'Ryan Lee',    email: 'r.lee@bms.com',    initials: 'RL', avatarColor: 'bg-teal-500',  role: 'Viewer' },
-    { id: 'tm-009', name: 'Marcus Webb', email: 'm.webb@bms.com',   initials: 'MW', avatarColor: 'bg-cyan-500',  role: 'Editor' },
-  ],
-};
 
 // ─── Document data ────────────────────────────────────────────────────────────
 

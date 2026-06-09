@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { AgentChatMessage } from '../../types/chat-agents';
 import AddToNotesModal from './AddToNotesModal';
+import CreateDocumentModal from '../ResearchDocuments/DocumentsList/CreateDocumentModal';
+import { createResearchDocument } from '../../services/research-documents';
 import { buildPath, ROUTES } from '../../constants/routes';
 
 interface MessageBubbleProps {
   message: AgentChatMessage;
   onAddToNotes?: (message: AgentChatMessage) => void;
+  onFollowUpQuery?: (text: string) => void;
 }
 
 function renderInline(text: string): React.ReactNode {
@@ -101,9 +104,11 @@ function renderMarkdown(text: string): React.ReactNode {
   });
 }
 
-function MessageBubble({ message, onAddToNotes }: MessageBubbleProps) {
+function MessageBubble({ message, onAddToNotes, onFollowUpQuery }: MessageBubbleProps) {
   const [added, setAdded] = useState(message.addedToNotes ?? false);
   const [showModal, setShowModal] = useState(false);
+  const [showCreateDocModal, setShowCreateDocModal] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const isUser = message.role === 'user';
 
   const navigate = useNavigate();
@@ -111,12 +116,34 @@ function MessageBubble({ message, onAddToNotes }: MessageBubbleProps) {
 
   const handleModalSelect = (documentId: string | 'new') => {
     setShowModal(false);
+
+    if (documentId === 'new') {
+      setShowCreateDocModal(true);
+      return;
+    }
+
     setAdded(true);
     onAddToNotes?.(message);
+    navigate(
+      buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId: documentId }),
+      { state: { pendingNote: { title: 'Chat Note', content: message.content } } },
+    );
+  };
 
-    const noteState = { pendingNote: { title: 'Chat Note', content: message.content } };
-    const docId = documentId === 'new' ? 'new' : documentId;
-    navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId }), { state: noteState });
+  const handleCreateDocument = async (name: string, description: string) => {
+    setIsCreating(true);
+    try {
+      const rawDoc = await createResearchDocument(indicationId, name, description);
+      setShowCreateDocModal(false);
+      setAdded(true);
+      onAddToNotes?.(message);
+      navigate(
+        buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId: rawDoc.doc_id }),
+        { state: { title: name, description, pendingNote: { title: 'Chat Note', content: message.content } } },
+      );
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   if (isUser) {
@@ -142,85 +169,140 @@ function MessageBubble({ message, onAddToNotes }: MessageBubbleProps) {
         </div>
         <div className="flex flex-col gap-2 max-w-[82%]">
           {/* Response bubble */}
-          <div className="bg-white border border-rd-chat-border rounded-3xl rounded-tl-none px-4 py-3 text-xs font-sans text-neutral-700 leading-relaxed">
-            {renderMarkdown(message.content)}
-          </div>
-
-          {/* Action row */}
-          <div className="flex items-center gap-1 flex-wrap">
-            <button
-              type="button"
-              className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
-              title="Copy"
-            >
-              <i className="bi bi-copy text-xs" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
-              title="Regenerate"
-            >
-              <i className="bi bi-arrow-repeat text-xs" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
-              title="Thumbs up"
-            >
-              <i className="bi bi-hand-thumbs-up text-xs" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
-              title="Thumbs down"
-            >
-              <i className="bi bi-hand-thumbs-down text-xs" aria-hidden="true" />
-            </button>
-
-            <div className="w-px h-3 bg-neutral-200 mx-0.5" />
-
-            <button
-              type="button"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-neutral-200 text-xs text-neutral-600 hover:bg-neutral-50 transition-colors"
-            >
-              <i className="bi bi-hand-thumbs-up text-xs" aria-hidden="true" />
-              Helpful
-            </button>
-            <button
-              type="button"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-neutral-200 text-xs text-neutral-600 hover:bg-neutral-50 transition-colors"
-            >
-              <i className="bi bi-pencil text-xs" aria-hidden="true" />
-              Improve
-            </button>
-
-            {onAddToNotes && (
-              added ? (
-                <span className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200">
-                  <i className="bi bi-check-circle-fill text-xs" aria-hidden="true" />
-                  Added to Notes
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                  className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full border border-brand-primary text-xs font-semibold text-brand-primary hover:bg-purple-50 transition-colors"
-                >
-                  <i className="bi bi-plus text-sm" aria-hidden="true" />
-                  Add to Notes
-                </button>
-              )
+          <div className={[
+            'border rounded-3xl rounded-tl-none px-4 py-3 text-xs font-sans leading-relaxed',
+            message.isError
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : 'bg-white border-rd-chat-border text-neutral-700',
+          ].join(' ')}>
+            {message.isError ? (
+              <div className="flex items-start gap-2">
+                <i className="bi bi-exclamation-circle-fill text-red-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span>{message.content}</span>
+              </div>
+            ) : message.streaming && !message.content ? (
+              <div>
+                <div className="flex gap-1 py-0.5">
+                  <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce" />
+                </div>
+                {message.activityText && (
+                  <p className="mt-1.5 text-[11px] text-neutral-400 italic">{message.activityText}</p>
+                )}
+              </div>
+            ) : (
+              <>
+                {renderMarkdown(message.content)}
+                {message.streaming && message.activityText && (
+                  <p className="mt-1.5 text-[11px] text-neutral-400 italic">{message.activityText}</p>
+                )}
+              </>
             )}
           </div>
+
+          {/* Follow-up query chips */}
+          {!message.streaming && message.followUpQueries && message.followUpQueries.length > 0 && (
+            <div className="flex flex-col gap-1.5 mt-1">
+              {message.followUpQueries.map((q, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => onFollowUpQuery?.(q)}
+                  className="text-left px-3 py-2 rounded-xl border border-brand-primary/30 bg-brand-primary/5 text-xs text-brand-primary hover:bg-brand-primary/10 hover:border-brand-primary transition-colors"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Action row — hidden while streaming or on error */}
+          {!message.streaming && !message.isError && (
+            <div className="flex items-center gap-1 flex-wrap">
+              <button
+                type="button"
+                className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
+                title="Copy"
+              >
+                <i className="bi bi-copy text-xs" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
+                title="Regenerate"
+              >
+                <i className="bi bi-arrow-repeat text-xs" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
+                title="Thumbs up"
+              >
+                <i className="bi bi-hand-thumbs-up text-xs" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 transition-colors"
+                title="Thumbs down"
+              >
+                <i className="bi bi-hand-thumbs-down text-xs" aria-hidden="true" />
+              </button>
+
+              <div className="w-px h-3 bg-neutral-200 mx-0.5" />
+
+              <button
+                type="button"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-neutral-200 text-xs text-neutral-600 hover:bg-neutral-50 transition-colors"
+              >
+                <i className="bi bi-hand-thumbs-up text-xs" aria-hidden="true" />
+                Helpful
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-neutral-200 text-xs text-neutral-600 hover:bg-neutral-50 transition-colors"
+              >
+                <i className="bi bi-pencil text-xs" aria-hidden="true" />
+                Improve
+              </button>
+
+              {onAddToNotes && (
+                added ? (
+                  <span className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200">
+                    <i className="bi bi-check-circle-fill text-xs" aria-hidden="true" />
+                    Added to Notes
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(true)}
+                    className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full border border-brand-primary text-xs font-semibold text-brand-primary hover:bg-purple-50 transition-colors"
+                  >
+                    <i className="bi bi-plus text-sm" aria-hidden="true" />
+                    Add to Notes
+                  </button>
+                )
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {showModal && (
         <AddToNotesModal
+          assetId={assetId}
+          indicationId={indicationId}
           onSelect={handleModalSelect}
           onClose={() => setShowModal(false)}
         />
       )}
+
+      <CreateDocumentModal
+        open={showCreateDocModal}
+        onClose={() => setShowCreateDocModal(false)}
+        onCreate={handleCreateDocument}
+        isCreating={isCreating}
+      />
     </>
   );
 }

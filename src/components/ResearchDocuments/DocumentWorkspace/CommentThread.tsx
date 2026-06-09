@@ -53,7 +53,7 @@ function CommentThread({ comment, onReply }: CommentThreadProps) {
       {(comment.replies ?? []).map((reply) => {
         const replyChip = getAvatarChipClasses(reply.author);
         return (
-          <div key={reply.id} className="flex gap-2.5 pl-4">
+          <div key={reply.id} className="flex gap-2.5 pl-4 ">
             <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-2xs font-bold ${replyChip.bg} ${replyChip.text}`}>
               {reply.authorInitials}
             </div>

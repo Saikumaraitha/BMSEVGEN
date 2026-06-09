@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CreateDocumentModalProps {
   open: boolean;
   onClose: () => void;
   onCreate: (name: string, description: string) => void;
   isCreating?: boolean;
+  initialName?: string;
+  initialDescription?: string;
+  title?: string;
+  submitLabel?: string;
 }
 
-function CreateDocumentModal({ open, onClose, onCreate, isCreating = false }: CreateDocumentModalProps) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+function CreateDocumentModal({
+  open,
+  onClose,
+  onCreate,
+  isCreating = false,
+  initialName,
+  initialDescription,
+  title = 'Create New Document',
+  submitLabel = 'Create',
+}: CreateDocumentModalProps) {
+  const [name, setName] = useState(initialName ?? '');
+  const [description, setDescription] = useState(initialDescription ?? '');
+
+  useEffect(() => {
+    if (open) {
+      setName(initialName ?? '');
+      setDescription(initialDescription ?? '');
+    }
+  }, [open, initialName, initialDescription]);
 
   if (!open) return null;
 
@@ -36,7 +56,7 @@ function CreateDocumentModal({ open, onClose, onCreate, isCreating = false }: Cr
           <i className="bi bi-x-lg text-lg" aria-hidden="true" />
         </button>
 
-        <h2 className="text-lg font-bold text-center text-neutral-800 mb-7">Create New Document</h2>
+        <h2 className="text-lg font-bold text-center text-neutral-800 mb-7">{title}</h2>
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
@@ -81,7 +101,7 @@ function CreateDocumentModal({ open, onClose, onCreate, isCreating = false }: Cr
             className="px-7 py-2 rounded-[5px] text-[#FFF] text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ fontFamily: 'Roboto', background: 'linear-gradient(180deg, #E43BE0 0%, #B500B1 100%)' }}
           >
-            {isCreating ? 'Creating…' : 'Create'}
+            {isCreating ? `${submitLabel}…` : submitLabel}
           </button>
         </div>
       </div>

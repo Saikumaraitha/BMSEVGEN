@@ -3,7 +3,7 @@ import SortIcon from '../../assets/icons/sort.svg?react'
 import PlusIcon from '../../assets/icons/plus.svg?react'
 import SearchIcon from '../../assets/icons/search.svg?react'
 import FilterIcon from '../../assets/icons/filter.svg?react'
-import ChevronDown from '../../assets/icons/chevron-down.svg?react'
+import Select from '../common/Select'
 
 const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
   { value: 'all',          label: 'All Statuses' },
@@ -54,36 +54,30 @@ function HomeToolbar({
       <div className="flex items-center gap-1.5 text-sm text-neutral-500">
         <FilterIcon className="w-2.5 h-2.5 text-brand-primary" aria-hidden="true" />
         <span className="font-medium text-xs text-brand-primary">Status:</span>
-        <div className="relative flex items-center">
-          <select
-            value={statusFilter}
-            onChange={(e) => onStatusFilterChange(e.target.value as StatusFilter)}
-            className="appearance-none bg-transparent text-neutral-700 text-xs font-medium cursor-pointer focus:outline-none pr-4"
-          >
-            {STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-0 w-3 h-3 text-brand-primary pointer-events-none" aria-hidden="true" />
-        </div>
+        <Select
+          value={statusFilter}
+          onChange={(v) => onStatusFilterChange(v as StatusFilter)}
+          options={STATUS_OPTIONS}
+          transparent
+          noBorder
+          valueColor="text-neutral-700"
+          triggerClassName="!text-xs !font-medium !justify-start !gap-3 !px-0 !py-0.5 !w-auto"
+        />
       </div>
 
       {/* Sort By */}
       <div className="flex items-center gap-1.5 text-sm text-neutral-500">
         <SortIcon className="w-4 h-4" aria-hidden="true" />
         <span className="font-medium text-xs text-brand-primary">Sort By:</span>
-        <div className="relative flex items-center">
-          <select
-            value={sortBy}
-            onChange={(e) => onSortChange(e.target.value as SortKey)}
-            className="appearance-none bg-transparent text-neutral-700 text-xs font-medium cursor-pointer focus:outline-none pr-4"
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-0 w-3 h-3 text-brand-primary pointer-events-none" aria-hidden="true" />
-        </div>
+        <Select
+          value={sortBy}
+          onChange={(v) => onSortChange(v as SortKey)}
+          options={SORT_OPTIONS}
+          transparent
+          noBorder
+          valueColor="text-neutral-700"
+          triggerClassName="!text-xs !font-medium !justify-start !gap-4 !px-0 !py-0.5 !w-auto"
+        />
       </div>
 
       {/* Search */}
@@ -93,7 +87,7 @@ function HomeToolbar({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search by Name, MoA, TA"
-          className="text-sm text-neutral-700 placeholder-neutral-400 bg-transparent focus:outline-none"
+          className="text-sm text-neutral-700 placeholder-neutral-400 bg-transparent focus:outline-none placeholder:italic"
         />
         <button
           type="button"

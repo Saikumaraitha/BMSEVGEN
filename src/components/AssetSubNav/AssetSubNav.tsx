@@ -68,7 +68,9 @@ function AssetSubNav({ assetName, activeTab, indicationName, lastUpdated, onBack
                 onClick={() => {
                   const route = ASSET_NAV_ROUTES[tab];
                   if (route)
-                    navigate(buildPath(route, { assetId, indicationId }));
+                    navigate(buildPath(route, { assetId, indicationId }), {
+                      state: { assetName, indicationName },
+                    });
                 }}
                 className={[
                   "flex-shrink-0 px-4 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors duration-200 ease-in-out font-heading",

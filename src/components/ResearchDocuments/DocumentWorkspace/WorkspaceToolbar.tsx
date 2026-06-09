@@ -16,12 +16,15 @@ interface WorkspaceToolbarProps {
   editDescription: string;
   unsavedChangesCount: number;
   onEditStart: () => void;
+  onEditDocument: () => void;
   onTitleChange: (v: string) => void;
   onDescriptionChange: (v: string) => void;
   onSaveChanges: () => void;
   onCancelEdit: () => void;
   onSearchChange: (term: string) => void;
   onDownloadSelect: (type: 'word' | 'pdf') => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
   onAddNote?: () => void;
   onShare: () => void;
   onDelete: () => void;
@@ -37,7 +40,10 @@ function WorkspaceToolbar({
   editTitle,
   editDescription,
   unsavedChangesCount,
-  onEditStart,
+  canEdit = false,
+  canDelete = false,
+  // onEditStart,
+  onEditDocument,
   onTitleChange,
   onDescriptionChange,
   onSaveChanges,
@@ -131,14 +137,16 @@ function WorkspaceToolbar({
         </h1>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button
-            type="button"
-            onClick={onEditStart}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-primary bg-white text-brand-primary text-xs font-medium font-sans hover:bg-primary-tint-04 transition-colors whitespace-nowrap"
-          >
-            <i className="bi bi-pencil text-xs flex-shrink-0" aria-hidden="true" />
-            Edit Document
-          </button>
+          {canEdit && (
+            <button
+              type="button"
+              onClick={onEditDocument}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-primary bg-white text-brand-primary text-xs font-medium font-sans hover:bg-primary-tint-04 transition-colors whitespace-nowrap"
+            >
+              <i className="bi bi-pencil text-xs flex-shrink-0" aria-hidden="true" />
+              Edit Document
+            </button>
+          )}
 
           <div className="relative">
             <input
@@ -199,14 +207,16 @@ function WorkspaceToolbar({
             <ShareIcon className="w-4 h-4" aria-hidden="true" />
           </button>
 
-          <button
-            type="button"
-            onClick={onDelete}
-            className="w-7 h-7 flex items-center justify-center rounded-lg border border-rd-card-border text-rd-trash hover:bg-red-50 transition-colors"
-            aria-label="Delete document"
-          >
-            <TrashIcon className="w-4 h-4" aria-hidden="true" />
-          </button>
+          {canDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="w-7 h-7 flex items-center justify-center rounded-lg border border-rd-card-border text-rd-trash hover:bg-red-50 transition-colors"
+              aria-label="Delete document"
+            >
+              <TrashIcon className="w-4 h-4" aria-hidden="true" />
+            </button>
+          )}
         </div>
       </div>
 

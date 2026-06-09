@@ -6,8 +6,23 @@ import type {
   AgentChatMessage,
   FrequentQuery,
   ChatMode,
+  RawNavigationResponse,
 } from '../types/chat-agents';
 import api from '../lib/axios';
+import { awsSigV4Api } from './http';
+import { realChatApiAdapter } from './chatbot/realAdaptor';
+import type {
+  CreateChatResponse,
+  SubmitFeedbackRequest,
+  SubmitFeedbackResponse,
+  SaveChatRequest,
+  SaveChatResponse,
+  DeleteChatResponse,
+  DeleteProjectResponse,
+  UnlinkChatFromProjectResponse,
+  RenameChatResponse,
+  RenameProjectResponse,
+} from './chatbot/contracts';
 
 export async function getChatProjects(assetId: string): Promise<ChatProject[]> {
   if (import.meta.env.VITE_MOCK_ENABLED === 'true') {
@@ -27,13 +42,14 @@ export async function getRecentChats(assetId: string): Promise<RecentChat[]> {
   return data;
 }
 
+export async function getChatProjectsAndRecents(iepId: string): Promise<RawNavigationResponse> {
+  const base = (import.meta.env.VITE_AI_ENGINE_BASE_URL ?? '').replace(/\/$/, '');
+  return awsSigV4Api.get<RawNavigationResponse>(`${base}/api/v1/chats/navigation`, { query: { iep_id: iepId } });
+}
+
 export async function getAgentCategories(): Promise<AgentCategory[]> {
-  if (import.meta.env.VITE_MOCK_ENABLED === 'true') {
-    const { mockAgentCategories } = await import('../mocks/chat-agents');
-    return mockAgentCategories;
-  }
-  const { data } = await api.get<AgentCategory[]>('/chat-agents/agents');
-  return data;
+  const { mockAgentCategories } = await import('../mocks/chat-agents');
+  return mockAgentCategories;
 }
 
 export async function getChatMessages(chatId: string): Promise<AgentChatMessage[]> {
@@ -45,29 +61,82 @@ export async function getChatMessages(chatId: string): Promise<AgentChatMessage[
   return data;
 }
 
-export async function getFrequentQueries(assetId: string): Promise<FrequentQuery[]> {
+export async function getFrequentQueries(): Promise<FrequentQuery[]> {
   if (import.meta.env.VITE_MOCK_ENABLED === 'true') {
     const { mockFrequentQueries } = await import('../mocks/chat-agents');
     return mockFrequentQueries;
   }
-  const { data } = await api.get<FrequentQuery[]>(`/chat-agents/frequent-queries?assetId=${assetId}`);
-  return data;
+  const response = await realChatApiAdapter.getFrequentQueries();
+  return response.queries.map((q) => ({ id: q.id, question: q.text }));
 }
 
-export async function createProject(assetId: string, name: string): Promise<ChatProject> {
+// ─── Project APIs ─────────────────────────────────────────────────────────────
+
+export async function createProject(_assetId: string, name: string, iepId: string): Promise<ChatProject> {
   if (import.meta.env.VITE_MOCK_ENABLED === 'true') {
     return { id: `proj-${Date.now()}`, name, chats: [] };
   }
-  const { data } = await api.post<ChatProject>('/chat-agents/projects', { assetId, name });
-  return data;
+  const response = await realChatApiAdapter.createProject({ name, iep_id: iepId });
+  return {
+    id: response.projectId,
+    name: response.name,
+    chats: [],
+  };
 }
 
-export async function createChat(projectId: string, title: string): Promise<ProjectChat> {
-  if (import.meta.env.VITE_MOCK_ENABLED === 'true') {
-    return { id: `chat-${Date.now()}`, title, projectId };
-  }
-  const { data } = await api.post<ProjectChat>('/chat-agents/chats', { projectId, title });
-  return data;
+export async function deleteProject(
+  projectId: string,
+  retainChats = true,
+): Promise<DeleteProjectResponse> {
+  return realChatApiAdapter.deleteProject({ projectId, retain_chats: retainChats });
+}
+
+export async function renameProject(
+  projectId: string,
+  name: string,
+): Promise<RenameProjectResponse> {
+  return realChatApiAdapter.renameProject({ projectId, name });
+}
+
+// ─── Chat Session APIs ────────────────────────────────────────────────────────
+
+export async function createChat(
+  projectId: string | null,
+  iepId: string,
+  responseStyle: ChatMode = 'concise',
+): Promise<CreateChatResponse> {
+  return realChatApiAdapter.createChat({
+    project_id: projectId,
+    iep_id: iepId,
+    response_style: responseStyle,
+  });
+}
+
+export async function deleteChat(chatId: string): Promise<DeleteChatResponse> {
+  return realChatApiAdapter.deleteChat({ chatId });
+}
+
+export async function renameChat(chatId: string, title: string): Promise<RenameChatResponse> {
+  return realChatApiAdapter.renameChat({ chatId, title });
+}
+
+export async function unlinkChatFromProject(
+  projectId: string,
+  chatId: string,
+): Promise<UnlinkChatFromProjectResponse> {
+  return realChatApiAdapter.unlinkChatFromProject({ projectId, chatId });
+}
+
+export async function saveChat(request: SaveChatRequest): Promise<SaveChatResponse> {
+  return realChatApiAdapter.saveChat(request);
+}
+
+// ─── Message APIs ─────────────────────────────────────────────────────────────
+
+export async function submitFeedback(
+  request: SubmitFeedbackRequest,
+): Promise<SubmitFeedbackResponse> {
+  return realChatApiAdapter.submitFeedback(request);
 }
 
 // Returns only the AI response; caller is responsible for optimistically adding the user message.
@@ -121,3 +190,8 @@ export async function addMessageToNotes(messageId: string): Promise<void> {
   }
   await api.put(`/chat-agents/messages/${messageId}/notes`);
 }
+
+// ─── Re-exports for convenience ───────────────────────────────────────────────
+
+export type { CreateChatResponse, SubmitFeedbackRequest, SubmitFeedbackResponse, SaveChatRequest, SaveChatResponse };
+export type { ProjectChat };

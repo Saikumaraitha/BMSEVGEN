@@ -7,7 +7,7 @@ interface AppLayoutProps {
 
 function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="flex flex-col h-screen bg-neutral-50">
+    <div className="flex flex-col h-screen bg-white">
       <TopBar />
       <main className="flex-1 overflow-auto page-fade-in scrollbar-thin-styled">
         {children}

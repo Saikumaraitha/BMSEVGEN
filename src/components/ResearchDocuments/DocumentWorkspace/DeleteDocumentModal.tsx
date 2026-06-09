@@ -3,9 +3,10 @@ interface DeleteDocumentModalProps {
   docTitle: string;
   onConfirm: () => void;
   onCancel: () => void;
+  isDeleting?: boolean;
 }
 
-function DeleteDocumentModal({ open, docTitle, onConfirm, onCancel }: DeleteDocumentModalProps) {
+function DeleteDocumentModal({ open, docTitle, onConfirm, onCancel, isDeleting = false }: DeleteDocumentModalProps) {
   if (!open) return null;
 
   return (
@@ -42,9 +43,10 @@ function DeleteDocumentModal({ open, docTitle, onConfirm, onCancel }: DeleteDocu
             <button
               type="button"
               onClick={onConfirm}
-              className="px-5 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              disabled={isDeleting}
+              className="px-5 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Delete
+              {isDeleting ? 'Deleting…' : 'Delete'}
             </button>
           </div>
         </div>

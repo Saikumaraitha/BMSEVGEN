@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import type { ResearchDocument } from '../../types/research-documents';
 import type { RdFilterKey, RdSortKey } from '../../config/ResearchDocumentsConfig';
 import { buildPath, ROUTES } from '../../constants/routes';
-import { createResearchDocument } from '../../services/research-documents';
+import { createResearchDocument, deleteResearchDocument } from '../../services/research-documents';
 
 interface DocumentsListHandlerDeps {
   setSearchParams: SetURLSearchParams;
@@ -14,9 +14,11 @@ interface DocumentsListHandlerDeps {
   setDocuments: Dispatch<SetStateAction<ResearchDocument[]>>;
   setShowCreateModal: Dispatch<SetStateAction<boolean>>;
   setIsCreating: Dispatch<SetStateAction<boolean>>;
+  setIsDeleting: Dispatch<SetStateAction<boolean>>;
   navigate: NavigateFunction;
   assetId: string;
   indicationId: string;
+  loadDocuments: () => void;
 }
 
 export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
@@ -26,12 +28,13 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
     setSortBy,
     setShareOpen,
     setDeleteDoc,
-    setDocuments,
     setShowCreateModal,
     setIsCreating,
+    setIsDeleting,
     navigate,
     assetId,
     indicationId,
+    loadDocuments,
   } = deps;
 
   const handleFilterChange = (key: RdFilterKey) => setSearchParams({ filter: key });
@@ -48,23 +51,34 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
 
   const handleDeleteCancel = () => setDeleteDoc(null);
 
-  const handleDeleteConfirm = (docId: string) => {
-    setDocuments((prev) => prev.filter((d) => d.id !== docId));
-    setDeleteDoc(null);
+  const handleDeleteConfirm = async (docId: string) => {
+    setIsDeleting(true);
+    try {
+      await deleteResearchDocument(docId);
+      setDeleteDoc(null);
+      loadDocuments();
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleCardClick = (docId: string) =>
     navigate(buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId }));
+
+  const handleEditClick = (docId: string) =>
+    navigate(
+      buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId }) + '?action=edit',
+    );
 
   const handleCreateNew = () => setShowCreateModal(true);
 
   const handleCreateDocument = async (name: string, description: string) => {
     setIsCreating(true);
     try {
-      const { id } = await createResearchDocument(assetId, name, description);
+      const rawDoc = await createResearchDocument(indicationId, name, description);
       setShowCreateModal(false);
       navigate(
-        buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId: id }),
+        buildPath(ROUTES.ASSET.RESEARCH_DOCUMENTS.DOC, { assetId, indicationId, docId: rawDoc.doc_id }),
         { state: { title: name, description } },
       );
     } finally {
@@ -87,6 +101,7 @@ export function createDocumentsListHandlers(deps: DocumentsListHandlerDeps) {
     handleDeleteCancel,
     handleDeleteConfirm,
     handleCardClick,
+    handleEditClick,
     handleCreateNew,
     handleCreateDocument,
     handleGenerateGaps,

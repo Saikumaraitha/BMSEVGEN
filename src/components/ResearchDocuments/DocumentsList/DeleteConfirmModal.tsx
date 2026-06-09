@@ -3,9 +3,10 @@ interface DeleteConfirmModalProps {
   docTitle: string;
   onConfirm: () => void;
   onCancel: () => void;
+  isDeleting?: boolean;
 }
 
-function DeleteConfirmModal({ open, docTitle, onConfirm, onCancel }: DeleteConfirmModalProps) {
+function DeleteConfirmModal({ open, docTitle, onConfirm, onCancel, isDeleting = false }: DeleteConfirmModalProps) {
   if (!open) return null;
 
   return (
@@ -36,9 +37,10 @@ function DeleteConfirmModal({ open, docTitle, onConfirm, onCancel }: DeleteConfi
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+            disabled={isDeleting}
+            className="flex-1 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Delete
+            {isDeleting ? 'Deleting…' : 'Delete'}
           </button>
         </div>
       </div>
