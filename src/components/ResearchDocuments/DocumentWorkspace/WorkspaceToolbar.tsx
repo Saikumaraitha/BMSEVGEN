@@ -22,7 +22,7 @@ interface WorkspaceToolbarProps {
   onCancelEdit: () => void;
   onSearchChange: (term: string) => void;
   onDownloadSelect: (type: 'word' | 'pdf') => void;
-  onAddNote: () => void;
+  onAddNote?: () => void;
   onShare: () => void;
   onDelete: () => void;
   onToggleDownload: () => void;
@@ -44,7 +44,6 @@ function WorkspaceToolbar({
   onCancelEdit,
   onSearchChange,
   onDownloadSelect,
-  onAddNote,
   onShare,
   onDelete,
   onToggleDownload,
@@ -127,20 +126,18 @@ function WorkspaceToolbar({
     <div className="px-5 py-4 border-b border-neutral-100 bg-white">
       {/* Row 1: title + actions */}
       <div className="flex items-center gap-3">
-        <h1 className="flex-1 text-base font-bold text-brand-primary truncate min-w-0">
+        <h1 className="flex-1 text-base font-bold text-brand-primary-dark truncate min-w-0">
           {document.title}
         </h1>
 
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             type="button"
-            onClick={onAddNote}
-            className="inline-flex items-center gap-1.5 pl-1 pr-3 py-1 rounded-full border border-brand-primary bg-white text-brand-primary-dark text-xs font-medium font-sans hover:bg-primary-tint-04 transition-colors whitespace-nowrap"
+            onClick={onEditStart}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-brand-primary bg-white text-brand-primary text-xs font-medium font-sans hover:bg-primary-tint-04 transition-colors whitespace-nowrap"
           >
-            <span className="w-5 h-5 rounded-full bg-exec-icon-bg text-brand-primary flex items-center justify-center flex-shrink-0">
-              <i className="bi bi-plus-lg text-xs" aria-hidden="true" />
-            </span>
-            Add Note
+            <i className="bi bi-pencil text-xs flex-shrink-0" aria-hidden="true" />
+            Edit Document
           </button>
 
           <div className="relative">
@@ -149,25 +146,16 @@ function WorkspaceToolbar({
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search within this document"
-              className="pl-4 pr-10 py-1.5 w-52 rounded-full bg-rd-search-bg focus:outline-none focus:ring-1 focus:ring-brand-primary placeholder:text-rd-search-placeholder placeholder:italic placeholder:font-normal placeholder:text-placeholder-sm placeholder:font-sans"
+              className="pl-4 pr-10 py-1.5 w-72 rounded-full bg-rd-search-bg focus:outline-none focus:ring-1 focus:ring-brand-primary placeholder:text-rd-search-placeholder placeholder:italic placeholder:font-normal placeholder:text-placeholder-sm placeholder:font-sans"
             />
             <button
               type="button"
-              className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors"
+              className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-brand-primary-dark text-white hover:bg-brand-primary-dark transition-colors"
               aria-label="Search"
             >
               <SearchIcon className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
-
-          <button
-            type="button"
-            onClick={onEditStart}
-            className="w-7 h-7 flex items-center justify-center rounded-lg border border-rd-card-border text-rd-section-label hover:bg-neutral-100 hover:text-brand-primary transition-colors"
-            aria-label="Edit document"
-          >
-            <i className="bi bi-pencil text-sm" aria-hidden="true" />
-          </button>
 
           <div className="relative">
             <button
@@ -177,7 +165,7 @@ function WorkspaceToolbar({
               className={[
                 'w-7 h-7 flex items-center justify-center rounded-lg transition-colors',
                 hasNotes
-                  ? 'bg-brand-primary text-white hover:bg-brand-primary-dark'
+                  ? 'border border-rd-card-border text-rd-section-label hover:bg-neutral-100 hover:text-brand-primary'
                   : 'border border-neutral-200 text-neutral-300 cursor-not-allowed',
               ].join(' ')}
               aria-label="Export"
@@ -223,14 +211,14 @@ function WorkspaceToolbar({
       </div>
 
       {/* Row 2: meta info */}
-      <div className="flex items-center gap-1.5 mt-2 text-xs text-neutral-400 flex-wrap">
+      <div className="flex items-center gap-1.5 text-xs text-neutral-400 flex-wrap">
         <span className="font-medium text-neutral-600">{document.owner.name}</span>
         <span>·</span>
-        <span>{document.owner.role}</span>
+        <span className="text-rd-section-label font-[Inter] text-[11px] not-italic font-medium">{document.owner.role}</span>
         <span>·</span>
-        <span>Last edited {formatDocDate(document.lastEdited)}</span>
+        <span className="text-rd-section-label font-[Inter] text-[11px] not-italic font-medium">Last edited {formatDocDate(document.lastEdited)}</span>
         <span>·</span>
-        <span><span className="font-bold">{noteCount}</span> saved {noteCount === 1 ? 'entry' : 'entries'}</span>
+        <span className="text-rd-section-label font-[Inter] text-[11px] not-italic font-medium"><span className="font-bold text-[#383836]">{noteCount}</span> saved {noteCount === 1 ? 'entry' : 'entries'}</span>
       </div>
     </div>
   );

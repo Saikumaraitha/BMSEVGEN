@@ -15,7 +15,6 @@ import {
 } from '../../config/ResearchDocumentsConfig';
 import {
   RD_SECTION_LABELS,
-  RD_PAGE_TITLE,
   RD_BACK_TO_DOCS_LABEL,
   RD_WORKSPACE_DOC_LABEL,
   RD_WORKSPACE_ACTIONS_LABEL,
@@ -96,7 +95,7 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
     <div className="flex flex-col h-full">
       <AssetSubNav
         assetName={assetName}
-        activeTab={RD_PAGE_TITLE}
+        activeTab="Research Workspace"
         indicationName={indicationName}
         lastUpdated={lastUpdated}
         onBack={onBack}
@@ -127,7 +126,7 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
                     <i className={`bi ${item.icon} text-base flex-shrink-0`} aria-hidden="true" />
                     <span className="flex-1 truncate">{item.label}</span>
                     {count > 0 && (
-                      <span className={['w-5 h-5 inline-flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0 leading-none', isActive ? 'bg-brand-primary/20 text-brand-primary' : 'bg-rd-count-badge text-rd-count'].join(' ')}>
+                      <span className={['w-5 h-5 inline-flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0 leading-none', isActive ? 'bg-white/30 text-white' : 'bg-rd-count-badge text-rd-count'].join(' ')}>
                         {count}
                       </span>
                     )}
@@ -158,7 +157,7 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
                     <i className={`bi ${item.icon} text-base flex-shrink-0`} aria-hidden="true" />
                     <span className="flex-1 truncate">{item.label}</span>
                     {count > 0 && (
-                      <span className={['w-5 h-5 inline-flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0 leading-none', isActive ? 'bg-brand-primary/20 text-brand-primary' : 'bg-rd-count-badge text-rd-count'].join(' ')}>
+                      <span className={['w-5 h-5 inline-flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0 leading-none', isActive ? 'bg-white/30 text-white' : 'bg-rd-count-badge text-rd-count'].join(' ')}>
                         {count}
                       </span>
                     )}
@@ -166,22 +165,22 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
                 );
               })}
 
-              <hr className="mt-2 mx-4 border-0 border-t border-rd-divider" />
+
             </nav>
           ) : (
             <nav className="flex flex-col py-2 flex-1">
               <button
                 type="button"
                 onClick={handleBackToList}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 font-inter text-[10px]  uppercase font-bold not-italic text-[#666662] hover:bg-neutral-100 transition-colors"
               >
                 <i className="bi bi-chevron-left text-xs" aria-hidden="true" />
                 {RD_BACK_TO_DOCS_LABEL}
               </button>
 
-              <div className="mx-4 my-3 border-t border-neutral-200" />
+              <div className="mx-4 my-1 border-t border-neutral-200" />
 
-              <p className="px-4 pb-1 text-detail-link font-bold text-neutral-400 uppercase tracking-widest">
+              <p className="px-4 pt-2 pb-1 text-detail-link font-bold font-heading text-rd-section-label uppercase tracking-widest">
                 {RD_WORKSPACE_DOC_LABEL}
               </p>
               {[
@@ -195,16 +194,16 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
                     type="button"
                     onClick={() => item.panelParam ? handlePanelClick(item.panelParam) : handlePanelClick('evgen')}
                     className={[
-                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 text-sm font-heading transition-colors border-l-[3px]',
+                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 h-[35px] transition-colors border-l-[3px] font-[Inter] text-[12px] leading-normal',
                       isActive
-                        ? 'border-brand-primary bg-brand-primary/10 text-brand-primary font-semibold'
-                        : 'border-transparent text-neutral-500 font-normal hover:bg-neutral-50',
+                        ? 'border-brand-primary bg-[var(--color-primary)] text-[#FFF] font-bold'
+                        : 'border-transparent text-[#3A3A3A] font-normal hover:bg-neutral-50',
                     ].join(' ')}
                   >
                     <item.Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                     <span className="flex-1">{item.label}</span>
                     {item.count > 0 && (
-                      <span className={['w-5 h-5 inline-flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0 leading-none', isActive ? 'bg-brand-primary/20 text-brand-primary' : 'bg-neutral-200 text-neutral-600'].join(' ')}>
+                      <span className={['w-5 h-5 inline-flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0 leading-none', isActive ? 'bg-white/30 text-white' : 'bg-rd-count-badge text-rd-count'].join(' ')}>
                         {item.count}
                       </span>
                     )}
@@ -214,7 +213,7 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
 
               <div className="mx-4 my-3 border-t border-neutral-200" />
 
-              <p className="px-4 pb-1 text-detail-link font-bold text-neutral-400 uppercase tracking-widest">
+              <p className="px-4 pt-2 pb-1 text-detail-link font-bold font-heading text-rd-section-label uppercase tracking-widest">
                 {RD_WORKSPACE_ACTIONS_LABEL}
               </p>
               {[
@@ -231,12 +230,12 @@ function LayoutContent({ assetName = 'Asset', indicationName, lastUpdated, onBac
                     onClick={disabled ? undefined : item.onClick}
                     disabled={disabled}
                     className={[
-                      'flex items-center gap-2 text-left px-4 py-2.5 text-sm font-medium transition-colors',
+                      'flex items-center gap-2 text-left pl-3 pr-4 py-2.5 h-[35px] transition-colors border-l-[3px] border-transparent font-[Inter] text-[12px] leading-normal',
                       disabled
                         ? 'text-neutral-300 cursor-not-allowed'
                         : item.danger
                           ? 'text-red-500 hover:bg-red-50'
-                          : 'text-neutral-700 hover:bg-neutral-100',
+                          : 'text-[#3A3A3A] hover:bg-neutral-50',
                     ].join(' ')}
                   >
                     <item.Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />

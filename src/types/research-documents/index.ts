@@ -1,5 +1,32 @@
 export type AccessType = 'My Doc' | 'Can Edit' | 'View Only';
 
+export interface RawDocUser {
+  user_id: string
+  name: string
+  role?: string
+}
+
+export interface RawResearchDocument {
+  doc_id: string
+  name: string
+  description: string
+  access_type: string
+  created_by: RawDocUser
+  owner: RawDocUser
+  last_edited_by: { user_id: string; name: string }
+  last_edited: string
+  is_active: boolean
+  created_at: string | null
+  iep_id: string
+}
+
+export interface RawResearchDocumentsResponse {
+  success: boolean
+  message: string
+  total: number
+  data: RawResearchDocument[]
+}
+
 export type ShareRole = 'Owner' | 'Editor' | 'Viewer';
 
 export interface ShareMember {

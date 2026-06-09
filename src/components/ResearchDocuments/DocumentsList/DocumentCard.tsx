@@ -15,9 +15,15 @@ interface DocumentCardProps {
 }
 
 const ACCESS_STYLES: Record<string, string> = {
-  'My Doc':    'bg-badge-congress-bg text-rd-tag-my-doc-text',
-  'Can Edit':  'bg-badge-experts-bg text-badge-experts-text',
+  'My Doc': 'bg-badge-congress-bg text-rd-tag-my-doc-text',
+  'Can Edit': 'bg-badge-experts-bg text-badge-experts-text',
   'View Only': 'bg-rd-tag-view-only-bg text-rd-tag-view-only-text',
+};
+
+const ACCESS_TOOLTIP: Record<string, string> = {
+  'My Doc': 'You created this document. You can view, edit, and delete this document.',
+  'Can Edit': 'This document was shared with you. You can view and edit this document, but you cannot delete it.',
+  'View Only': 'This document was shared with you as view-only. You can view this document, but you cannot edit or delete it.',
 };
 
 function DocumentCard(props: DocumentCardProps) {
@@ -60,9 +66,30 @@ function DocumentCard(props: DocumentCardProps) {
           >
             {doc.title}
           </button>
-          <span className={`px-2.5 py-0.5 rounded-full text-2xs font-medium shrink-0 ${ACCESS_STYLES[doc.accessType] ?? ''}`}>
-            {doc.accessType}
-          </span>
+          <div
+            className="relative inline-flex items-center gap-1 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className={`px-2.5 py-0.5 rounded-full text-2xs font-medium ${ACCESS_STYLES[doc.accessType] ?? ''}`}>
+              {doc.accessType}
+            </span>
+            <button
+              type="button"
+              className="relative group/info text-[#8c8c8c] hover:text-[#be2bbb] focus:outline-none flex items-center"
+              aria-label={`${doc.accessType} permission info`}
+            >
+              <i className="bi bi-info-circle-fill text-sm hover:text-base transition-all duration-200" aria-hidden="true" />
+              <div
+                role="tooltip"
+                className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1.5 z-50 w-80 opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-opacity duration-200"
+              >
+                <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#595959] border-t-2 border-l-2 border-[#be2bbb] rotate-45 rounded-[2px]" />
+                <div className="bg-[#595959] border-2 border-[#be2bbb] rounded-lg px-3 py-2.5 text-white text-sm leading-[1.5]">
+                  {ACCESS_TOOLTIP[doc.accessType]}
+                </div>
+              </div>
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center gap-1.5 flex-shrink-0">

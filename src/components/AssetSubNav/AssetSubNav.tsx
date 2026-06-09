@@ -73,7 +73,7 @@ function AssetSubNav({ assetName, activeTab, indicationName, lastUpdated, onBack
                 className={[
                   "flex-shrink-0 px-4 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors duration-200 ease-in-out font-heading",
                   isActive
-                    ? "bg-brand-primary text-white"
+                    ? "bg-brand-primary text-white border-b-[3px] border-b-[#A1179E] bg-[#BE2BBB]"
                     : "text-tab-inactive-90 hover:bg-brand-primary hover:text-white",
                 ].join(" ")}
               >

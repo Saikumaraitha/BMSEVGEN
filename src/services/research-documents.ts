@@ -1,6 +1,7 @@
-import type { ResearchDocument, ResearchDocumentData, ShareMember, TeamMember } from '../types/research-documents';
+import type { RawResearchDocument, RawResearchDocumentsResponse, ResearchDocumentData, ShareMember, TeamMember } from '../types/research-documents';
 import { todayDocDate } from '../utils/dateUtils';
 import api from '../lib/axios';
+import { awsSigV4Api } from './http';
 
 function emptyDocumentData(): ResearchDocumentData {
   return {
@@ -23,13 +24,20 @@ function emptyDocumentData(): ResearchDocumentData {
   };
 }
 
-export async function getResearchDocuments(assetId: string): Promise<ResearchDocument[]> {
-  if (import.meta.env.VITE_MOCK_ENABLED === 'true') {
-    const { mockDocuments } = await import('../mocks/research-documents');
-    return mockDocuments;
-  }
-  const { data } = await api.get<ResearchDocument[]>(`/research-documents?assetId=${assetId}`);
-  return data;
+export async function getMockResearchDocuments(): Promise<RawResearchDocument[]> {
+  const { mockRawDocuments } = await import('../mocks/research-documents');
+  return mockRawDocuments;
+}
+
+export async function getResearchDocuments(
+  _assetId: string,
+  indicationId: string,
+): Promise<RawResearchDocument[]> {
+  const base = (import.meta.env.VITE_AI_ENGINE_BASE_URL ?? '').replace(/\/$/, '');
+  const response = await awsSigV4Api.get<RawResearchDocumentsResponse>(
+    `${base}/api/v1/iep/${indicationId}/research-docs`,
+  );
+  return response.data;
 }
 
 export async function getDocumentData(

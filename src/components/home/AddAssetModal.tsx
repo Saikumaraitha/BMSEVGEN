@@ -1,59 +1,79 @@
 import { useState, useMemo } from 'react'
 import CloseSmIcon from '../../assets/icons/close-sm.svg?react'
-import type { Asset, Indication } from '../../types/home'
+import type { AssetsMetadataResponse, CreateIepResponseData } from '../../types/home'
+import { createIep } from '../../services/home'
 
 interface AddAssetModalProps {
-  open:     boolean
-  onClose:  () => void
-  assets:   Asset[]
-  onSubmit: (assetId: string, indication: Indication) => void
+  open:      boolean
+  onClose:   () => void
+  metadata:  AssetsMetadataResponse | null
+  onSuccess: (data: CreateIepResponseData) => void
 }
 
-function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) {
-  const [selectedAssetId, setSelectedAssetId] = useState('')
-  const [indicationName, setIndicationName]   = useState('')
-  const [selectedMoa, setSelectedMoa]         = useState('')
-  // const [notes, setNotes]                     = useState('')
-  const [error, setError]                     = useState('')
+function AddAssetModal({ open, onClose, metadata, onSuccess }: AddAssetModalProps) {
+  const [selectedAssetId,   setSelectedAssetId]   = useState('')
+  const [selectedDiseaseId, setSelectedDiseaseId] = useState('')
+  const [error,             setError]             = useState('')
+  const [submitting,        setSubmitting]         = useState(false)
 
   const selectedAsset = useMemo(
-    () => assets.find((a) => a.id === selectedAssetId) ?? null,
-    [assets, selectedAssetId],
+    () => metadata?.assets.find((a) => a.id === selectedAssetId) ?? null,
+    [metadata, selectedAssetId],
+  )
+
+  const selectedMoa = useMemo(
+    () => metadata?.mechanisms_of_action.find((m) => m.id === selectedAsset?.moaId)?.name ?? '',
+    [metadata, selectedAsset],
+  )
+
+  const selectedDisease = useMemo(
+    () => metadata?.disease_areas.find((d) => d.id === selectedDiseaseId) ?? null,
+    [metadata, selectedDiseaseId],
+  )
+
+  const selectedTherapeuticArea = useMemo(
+    () => metadata?.therapeutic_areas.find((ta) => ta.id === selectedDisease?.theurapetic_area_id)?.name ?? '',
+    [metadata, selectedDisease],
   )
 
   if (!open) return null
 
   const handleAssetChange = (id: string) => {
     setSelectedAssetId(id)
-    setIndicationName('')
-    const asset = assets.find((a) => a.id === id) ?? null
-    setSelectedMoa(asset?.mechanismOfAction ?? '')
+    setSelectedDiseaseId('')
     setError('')
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!selectedAssetId) { setError('Please select an asset.'); return }
-    if (!indicationName)  { setError('Please select an indication.'); return }
-
-    const indication: Indication = {
-      id:          `${selectedAssetId}-${indicationName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
-      name:        indicationName,
-      tags:        selectedAsset ? [selectedAsset.tags[0] ?? 'Oncology'] : ['Oncology'],
-      lastUpdated: new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' }),
-    }
-
-    onSubmit(selectedAssetId, indication)
+  const handleClose = () => {
     setSelectedAssetId('')
-    setIndicationName('')
-    setSelectedMoa('')
-    // setNotes('')
+    setSelectedDiseaseId('')
     setError('')
     onClose()
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedAssetId)   { setError('Please select an asset.'); return }
+    if (!selectedDiseaseId) { setError('Please select an indication.'); return }
+
+    setSubmitting(true)
+    setError('')
+
+    try {
+      const response = await createIep({ asset_id: selectedAssetId, disease_area_id: selectedDiseaseId })
+      onSuccess(response.data)
+      setSelectedAssetId('')
+      setSelectedDiseaseId('')
+      onClose()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create IEP. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   const selectClass =
-    'w-full bg-neutral-100 rounded-lg px-3 py-2.5 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 appearance-none cursor-pointer border-0'
+    'w-full bg-[#F2F6FB] rounded-lg px-3 py-2.5 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 appearance-none cursor-pointer border-0'
 
   const readOnlyClass =
     'w-full bg-neutral-100 rounded-lg px-3 py-2.5 text-sm text-neutral-500 border-0 focus:outline-none'
@@ -71,8 +91,9 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
           <div className="flex-1 flex justify-end">
             <button
               type="button"
-              onClick={onClose}
-              className="p-1 rounded-full hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition-colors"
+              onClick={handleClose}
+              disabled={submitting}
+              className="p-1 rounded-full hover:bg-neutral-100 text-neutral-700 hover:text-neutral-900 transition-colors disabled:opacity-50"
               aria-label="Close"
             >
               <CloseSmIcon className="w-5 h-5" aria-hidden="true" />
@@ -82,7 +103,7 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
-          {/* Row 1: Asset | Therapeutic Area */}
+          {/* Row 1: Asset | MoA */}
           <div className="grid grid-cols-2 gap-4">
             {/* Asset */}
             <div>
@@ -92,9 +113,10 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
                   value={selectedAssetId}
                   onChange={(e) => handleAssetChange(e.target.value)}
                   className={selectClass}
+                  disabled={submitting}
                 >
                   <option value="">Select</option>
-                  {assets.filter((a) => !a.archived).map((a) => (
+                  {(metadata?.assets ?? []).map((a) => (
                     <option key={a.id} value={a.id}>{a.name}</option>
                   ))}
                 </select>
@@ -102,75 +124,52 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
               </div>
             </div>
 
-            {/* Therapeutic Area (read-only, auto-filled) */}
+            {/* MoA (auto-filled from selected asset) */}
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-1.5">Therapeutic Area</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-1.5">MoA</label>
               <input
                 type="text"
                 readOnly
-                value={selectedAsset?.tags[0] ?? ''}
+                value={selectedMoa}
                 className={readOnlyClass}
               />
             </div>
           </div>
 
-          {/* Row 2: Indication | MoA */}
+          {/* Row 2: Indication | Therapeutic Area */}
           <div className="grid grid-cols-2 gap-4">
             {/* Indication */}
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-1.5">Indication</label>
               <div className="relative">
                 <select
-                  value={indicationName}
-                  onChange={(e) => { setIndicationName(e.target.value); setError('') }}
+                  value={selectedDiseaseId}
+                  onChange={(e) => { setSelectedDiseaseId(e.target.value); setError('') }}
                   className={selectClass}
-                  disabled={!selectedAssetId}
+                  disabled={!selectedAssetId || submitting}
                 >
                   <option value="">Select</option>
-                  {selectedAsset?.indications.map((ind) => (
-                    <option key={ind.id} value={ind.name}>{ind.name}</option>
+                  {(metadata?.disease_areas ?? []).map((d) => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
                   ))}
                 </select>
                 <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500">▾</span>
               </div>
             </div>
 
-            {/* MoA */}
+            {/* Therapeutic Area (auto-filled from selected indication) */}
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-1.5">MoA</label>
-              <div className="relative">
-                <select
-                  value={selectedMoa}
-                  onChange={(e) => setSelectedMoa(e.target.value)}
-                  className={selectClass}
-                  disabled={!selectedAssetId}
-                >
-                  <option value="">Select</option>
-                  {selectedAsset && (
-                    <option value={selectedAsset.mechanismOfAction}>
-                      {selectedAsset.mechanismOfAction}
-                    </option>
-                  )}
-                </select>
-                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500">▾</span>
-              </div>
+              <label className="block text-sm font-medium text-neutral-700 mb-1.5">Therapeutic Area</label>
+              <input
+                type="text"
+                readOnly
+                value={selectedTherapeuticArea}
+                className={readOnlyClass}
+              />
             </div>
           </div>
 
-          {/* Notes */}
-          {/* Commented for now - need to get clearer idea on functionality. */}
-          {/* <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1.5">Notes</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Enter notes"
-              rows={4}
-              className="w-full bg-neutral-100 rounded-lg px-3 py-2.5 text-sm text-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/40 resize-none border-0"
-            />
-          </div> */}
-
-          {/* Validation error */}
+          {/* Validation / API error */}
           {error && <p className="text-xs text-red-500 text-center -mt-2">{error}</p>}
 
           {/* Note text */}
@@ -185,16 +184,18 @@ function AddAssetModal({ open, onClose, assets, onSubmit }: AddAssetModalProps) 
           <div className="flex justify-center gap-4 pt-1">
             <button
               type="button"
-              onClick={onClose}
-              className="px-8 py-2.5 rounded-md font-heading border border-cancel text-cancel text-sm font-medium hover:bg-red-50 transition-colors"
+              onClick={handleClose}
+              disabled={submitting}
+              className="px-8 py-2.5 rounded-[5px] font-heading border-2 border-[#D70000] text-cancel text-sm font-bold hover:bg-red-50 transition-colors font-['Roboto'] disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-8 py-2 rounded-md font-heading asset-create-btn text-white text-sm font-medium hover:bg-brand-primary-dark transition-colors"
+              disabled={submitting}
+              className="px-8 py-2 rounded-md font-heading asset-create-btn text-white text-sm font-medium hover:bg-brand-primary-dark transition-colors disabled:opacity-60"
             >
-              Create
+              {submitting ? 'Creating…' : 'Create'}
             </button>
           </div>
 

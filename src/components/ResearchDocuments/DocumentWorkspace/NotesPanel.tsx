@@ -51,30 +51,7 @@ function NotesPanel({
   const isEmpty = notes.length === 0 && !showAddNote;
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Section header */}
-      <div className="flex items-center gap-2">
-        <NoteIcon className="w-4 h-4 text-rd-section-label flex-shrink-0" aria-hidden="true" />
-        <span className="text-sm font-semibold text-neutral-700">Notes</span>
-        {totalNoteCount > 0 && (
-          <span className="w-5 h-5 inline-flex items-center justify-center rounded-full bg-brand-primary text-white text-xs font-bold leading-none flex-shrink-0">
-            {totalNoteCount}
-          </span>
-        )}
-        <div className="flex-1" />
-        {isEditing && (
-          <button
-            type="button"
-            onClick={onAddNote}
-            className="inline-flex items-center gap-1 pl-1 pr-3 py-0.5 rounded-full border border-brand-primary bg-white text-brand-primary-dark text-xs font-medium hover:bg-primary-tint-04 transition-colors whitespace-nowrap"
-          >
-            <span className="w-5 h-5 rounded-full bg-exec-icon-bg text-brand-primary flex items-center justify-center flex-shrink-0">
-              <i className="bi bi-plus-lg text-xs" aria-hidden="true" />
-            </span>
-            Add Note
-          </button>
-        )}
-      </div>
+    <div className="flex flex-col gap-3">
 
       {/* Notes list */}
       {isEmpty && isFiltered ? (
@@ -94,7 +71,7 @@ function NotesPanel({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="border border-rd-card-border rounded-xl bg-white overflow-hidden divide-y divide-rd-divider">
           {notes.map((note) => (
             <NoteCard
               key={note.id}

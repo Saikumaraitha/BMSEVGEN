@@ -90,7 +90,7 @@ function DocumentsListHeader({
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as RdSortKey)}
-              className="appearance-none text-2xs font-normal font-heading border border-rd-sort-border rounded px-2 py-1 pr-6 text-tab-inactive bg-white focus:outline-none"
+              className="appearance-none text-2xs font-normal font-heading border border-[#B0B0B0] rounded px-2 py-1 pr-12 text-tab-inactive bg-white focus:outline-none"
             >
               {RD_SORT_OPTIONS.map((opt) => (
                 <option key={opt.key} value={opt.key}>

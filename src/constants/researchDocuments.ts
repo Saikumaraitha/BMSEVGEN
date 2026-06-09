@@ -1,4 +1,4 @@
-export const RD_PAGE_TITLE = 'Research Workspace';
+export const RD_PAGE_TITLE = 'Research Documents';
 export const RD_CREATE_NEW_LABEL = 'Create New';
 export const RD_SEARCH_PLACEHOLDER = 'Search documents';
 export const RD_SORT_BY_LABEL = 'Sort By';

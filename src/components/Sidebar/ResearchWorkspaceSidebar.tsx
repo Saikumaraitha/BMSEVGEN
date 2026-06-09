@@ -16,7 +16,7 @@ function ResearchWorkspaceSidebar({
     <aside
       className={[
         'flex-shrink-0 border-r border-neutral-200 flex flex-col transition-all duration-200 bg-[var(--color-tab-bg)]',
-        collapsed ? 'w-10' : 'w-56',
+        collapsed ? 'w-10' : 'w-48',
       ].join(' ')}
     >
       <div
@@ -25,11 +25,11 @@ function ResearchWorkspaceSidebar({
           collapsed ? 'justify-center px-0 py-3' : 'gap-2 px-3 py-3',
         ].join(' ')}
       >
-        {!collapsed && (
+        {/* {!collapsed && (
           <i className="bi bi-list text-base text-brand-primary flex-shrink-0" aria-hidden="true" />
-        )}
+        )} */}
         {!collapsed && (
-          <span className="flex-1 text-xs font-bold text-brand-primary uppercase whitespace-nowrap leading-snug">
+          <span className="flex-1 font-inter text-[10px] font-bold not-italic text-brand-primary uppercase whitespace-nowrap leading-snug">
             Research Workspace
           </span>
         )}

@@ -13,8 +13,17 @@ interface NoteCardProps {
   onCommentsClick: (noteId: string) => void;
 }
 
+const NOTE_TAG_COLORS = [
+  { badge: 'bg-violet-100 text-violet-600 border-violet-200', source: 'text-violet-600' },
+  { badge: 'bg-sky-100 text-sky-600 border-sky-200',          source: 'text-sky-600'    },
+  { badge: 'bg-emerald-100 text-emerald-600 border-emerald-200', source: 'text-emerald-600' },
+  { badge: 'bg-amber-100 text-amber-600 border-amber-200',    source: 'text-amber-600'  },
+  { badge: 'bg-rose-100 text-rose-600 border-rose-200',       source: 'text-rose-600'   },
+];
+
 function NoteCard({ note, isEditing, onEdit, onDuplicate: _onDuplicate, onDelete, onCommentsClick }: NoteCardProps) {
   const [editing, setEditing] = useState(false);
+  const tagColor = NOTE_TAG_COLORS[(note.number - 1) % NOTE_TAG_COLORS.length];
   const [editTitle, setEditTitle] = useState(note.title);
   const [editContent, setEditContent] = useState(note.content);
 
@@ -42,13 +51,13 @@ function NoteCard({ note, isEditing, onEdit, onDuplicate: _onDuplicate, onDelete
   if (editing) {
     return (
       <div
-        className="pt-3 pb-4 border border-rd-card-border outline outline-1 outline-brand-primary/40 rounded-xl bg-white"
+        className="pt-3 pb-4 outline outline-1 outline-brand-primary/40 bg-white"
         onBlur={handleContainerBlur}
         onKeyDown={(e) => { if (e.key === 'Escape') handleEditCancel(); }}
       >
         {/* Top row — same structure as read mode */}
         <div className="flex items-center px-4 mb-3">
-          <span className="h-[18px] flex items-center px-2.5 rounded-full text-2xs font-medium font-sans bg-rd-note-tag-bg text-rd-note-tag-text border border-rd-note-tag-text/20 uppercase tracking-wider shrink-0">
+          <span className={`h-[18px] flex items-center px-2.5 rounded-full text-2xs font-medium font-sans border uppercase tracking-wider shrink-0 ${tagColor.badge}`}>
             Note {note.number}
           </span>
           <div className="flex-1" />
@@ -95,7 +104,7 @@ function NoteCard({ note, isEditing, onEdit, onDuplicate: _onDuplicate, onDelete
             <p className="text-3xs font-normal font-sans text-rd-section-label flex items-center gap-1">
               <span>{note.author}</span>
               <span>·</span>
-              <span className="text-rd-tag-my-doc-text">{note.source === 'EvGenAI' ? 'via EvGenAi' : 'via manual entry'}</span>
+              <span className={tagColor.source}>{note.source === 'EvGenAI' ? 'via EvGenAi' : 'via manual entry'}</span>
             </p>
             <button
               type="button"
@@ -112,7 +121,7 @@ function NoteCard({ note, isEditing, onEdit, onDuplicate: _onDuplicate, onDelete
   }
 
   return (
-    <div className="pt-3 pb-4 border border-rd-card-border rounded-xl bg-white">
+    <div className="pt-3 pb-4 bg-white">
       {/* Top row: badge + date + clock + trash */}
       <div className="flex items-center px-4 mb-3">
         <span className="h-[18px] flex items-center px-2.5 rounded-full text-2xs font-medium font-sans bg-rd-note-tag-bg text-rd-note-tag-text border border-rd-note-tag-text/20 uppercase tracking-wider shrink-0">

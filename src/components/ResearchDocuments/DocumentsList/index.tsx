@@ -1,7 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import type { ResearchDocument } from '../../../types/research-documents';
+import type { AccessType, RawResearchDocument, ResearchDocument } from '../../../types/research-documents';
 import type { RdFilterKey, RdSortKey } from '../../../config/ResearchDocumentsConfig';
+
+const ACCESS_TYPE_MAP: Record<string, AccessType> = {
+  CAN_EDIT:  'Can Edit',
+  VIEW_ONLY: 'View Only',
+  OWNER:     'My Doc',
+};
+
+function deriveInitials(name: string): string {
+  return name.split(' ').map((p) => p[0] ?? '').join('').toUpperCase().slice(0, 2);
+}
+
+function transformDocument(raw: RawResearchDocument): ResearchDocument {
+  return {
+    id:           raw.doc_id,
+    title:        raw.name,
+    description:  raw.description,
+    accessType:   ACCESS_TYPE_MAP[raw.access_type] ?? 'View Only',
+    owner: {
+      name:        raw.owner.name,
+      initials:    deriveInitials(raw.owner.name),
+      role:        raw.owner.role ?? '',
+      avatarColor: '#7c3aed',
+    },
+    lastEdited:   raw.last_edited || raw.created_at || '',
+    lastEditedBy: raw.last_edited_by.name,
+    noteCount:    0,
+    commentCount: 0,
+  };
+}
 import { getResearchDocuments } from '../../../services/research-documents';
 import { createDocumentsListHandlers } from '../../../handlers/research-documents/documentsListHandlers';
 import { useResearchDocumentsContext } from '../../../contexts/ResearchDocumentsContext';
@@ -55,7 +84,8 @@ function DocumentsList() {
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
-    getResearchDocuments(assetId).then((docs) => {
+    getResearchDocuments(assetId, indicationId).then((rawDocs) => {
+      const docs = rawDocs.map(transformDocument);
       setDocuments(docs);
       setDocCounts({
         all: docs.length,
@@ -64,7 +94,7 @@ function DocumentsList() {
         'view-only': docs.filter((d) => d.accessType === 'View Only').length,
       });
     });
-  }, [assetId, setDocCounts]);
+  }, [assetId, indicationId, setDocCounts]);
 
   const activeFilter = (searchParams.get('filter') ?? 'all') as RdFilterKey;
 
